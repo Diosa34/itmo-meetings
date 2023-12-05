@@ -1,0 +1,35 @@
+.content {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-areas:
+    "A A A"
+    "B C D";
+    justify-content: space-around;
+    padding-top: 2rem;
+}
+
+.left, .middle, .right {
+    /*display: grid;*/
+    place-items: center;
+    padding: 2em;
+}
+
+.title {
+    grid-area: A;
+}
+
+.left {
+    grid-area: B;
+}
+
+.middle {
+    grid-area: C;
+}
+
+.right {
+    grid-area: D;
+}
+
+.notification {
+    padding: 1em;
+}

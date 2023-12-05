@@ -1,0 +1,18 @@
+.panel {
+    display: flex;
+    padding: 0 1rem;
+    justify-content: space-between;
+    border: 1px solid #e5e7eb;
+    border-width: 0 0 0.1em 0;
+}
+
+.logo {
+    font-family: var(--font-family);
+    display: inline-block;
+    padding: 1.2em 0.5em;
+    max-height: 57.6px;
+}
+
+.p-input-icon-left {
+    margin: 2rem;
+}
