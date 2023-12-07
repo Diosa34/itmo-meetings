@@ -1,4 +1,4 @@
-import React, {forwardRef, useImperativeHandle, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import { useFormik } from 'formik';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
@@ -47,7 +47,6 @@ function FeedbackForm({setModalActive, isModalActive}) {
     };
 
     return (
-        <div className="card flex justify-content-center p-5 shadow-2 border-round">
             <Dialog header="Header" visible={isModalActive} onHide={() => setModalActive(false)} style={{ width: '50vw' }} footer={footerContent}>
                 <form onSubmit={formik.handleSubmit} className="flex flex-column gap-2">
                     <label htmlFor="rating">Оцените меропритятие</label>
@@ -71,7 +70,6 @@ function FeedbackForm({setModalActive, isModalActive}) {
                     {/*<Button label="Отправить отзыв" type="submit" icon="pi pi-check" />*/}
                 </form>
             </Dialog>
-        </div>
     )
 }
 

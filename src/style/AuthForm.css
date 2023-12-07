@@ -1,0 +1,23 @@
+.auth {
+    /*padding-top: 10%;*/
+    display: grid;
+}
+
+.auth-card {
+    margin-bottom: 5rem;
+}
+
+.p-5 {
+    width: 25%;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+span, button {
+    margin-top: 1.4rem;
+}
+
+input {
+    min-width: 100%;
+}
