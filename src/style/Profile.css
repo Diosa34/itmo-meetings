@@ -20,6 +20,15 @@
 
 .left {
     grid-area: B;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.avatar {
+    min-width: 10rem;
+    min-height: 10rem;
 }
 
 .middle {

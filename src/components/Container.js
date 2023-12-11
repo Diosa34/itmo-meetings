@@ -1,8 +1,8 @@
 import {Outlet, Route, Routes} from "react-router-dom";
-import MainPage from "./MainPage";
-import Event from "./Event";
+import MainPage from "./pages/MainPage";
+import Event from "./pages/Event";
 import FeedbackForm from "./forms/FeedbackForm";
-import Profile from "./Profile";
+import Profile from "./pages/Profile";
 import CreateChannelForm from "./forms/CreateChannelForm";
 import React from "react";
 import Header from "./Header";

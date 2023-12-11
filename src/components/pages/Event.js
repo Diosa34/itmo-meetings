@@ -1,7 +1,7 @@
 import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
-import '../style/Event.css';
-import FeedbackForm from "./forms/FeedbackForm";
+import '../../style/Event.css';
+import FeedbackForm from "../forms/FeedbackForm";
 import {useRef, useState} from "react";
 
 

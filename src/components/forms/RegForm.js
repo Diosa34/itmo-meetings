@@ -3,16 +3,19 @@ import React, {useRef, useState} from "react";
 import '../../style/AuthForm.css';
 import {InputText} from 'primereact/inputtext';
 import {Button} from "primereact/button";
-import {InputNumber} from "primereact/inputnumber";
 import {Calendar} from "primereact/calendar";
 import {Password} from "primereact/password";
 import { Divider } from 'primereact/divider';
-import { Dialog } from 'primereact/dialog';
 import {useNavigate} from "react-router-dom";
 import {TabMenu} from "primereact/tabmenu";
 import {useFormik} from "formik";
 import {classNames} from "primereact/utils";
 import {RadioButton} from "primereact/radiobutton";
+import request from "../rest";
+import ShowError from "../ShowError";
+import {Toast} from "primereact/toast";
+import showToast from "../toast";
+import validate from "../../validation/register";
 
 function RegForm() {
 
@@ -20,13 +23,14 @@ function RegForm() {
     const [surname, setSurname] = useState("");
     const [name, setName] = useState("");
     const [patronymic, setPatronymic] = useState("");
-    const [birthDay, setBirthDay] = useState();
+    const [birthDay: Date, setBirthDay] = useState(new Date());
     const [gender, setGender] = useState();
     const [telephone, setTelephone] = useState("");
     const [email, setEmail] = useState("");
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
+    const [response, setResponse] = useState("");
 
 
     const [activeIndex, setActiveIndex] = useState(1);
@@ -51,8 +55,6 @@ function RegForm() {
         </>
     );
 
-    const toast = useRef(null);
-
     const radioBtns = [
         {
             id: 'male',
@@ -68,16 +70,15 @@ function RegForm() {
         }
     ]
 
-    const show = () => {
-        toast.current.show({ severity: 'success', summary: 'Зарегистрирован новый пользователь'});
-    };
+    const successToast = useRef(null);
+    const failToast = useRef(null);
 
     const formik = useFormik({
         initialValues: {
             isu: '',
             surname: '',
             name: '',
-            patronymic: '',
+            patronymic: null,
             gender: '',
             birthDay: '',
             telephone: '',
@@ -86,63 +87,40 @@ function RegForm() {
             password: '',
             password2: ''
         },
-        validate: (data) => {
-            let errors = {};
-
-            if (!data.isu) {
-                errors.isu = 'Введите ису';
-            } else if (String(isu).length !== 6) {
-                errors.isu = 'Некорректное ису';
-            }
-
-            if (!data.surname) {
-                errors.surname = 'Введите фамилию';
-            }
-
-            if (!data.name) {
-                errors.name = 'Введите имя';
-            }
-
-            if (!data.gender) {
-                errors.gender = 'Укажите пол';
-            }
-
-            if (!data.birthDay) {
-                errors.birthDay = 'Введите дату рождения';
-            } else if (data.birthDay > new Date()) {
-                errors.birthDay = 'Некорректная дата рождения'
-            }
-
-            if (!data.telephone) {
-                errors.telephone = 'Введите телефон';
-            }
-
-            if (!data.email) {
-                errors.email = 'Введите адрес электронной почты';
-            } else if (!(/.+@.+\..+/i.test(data.email))) {
-                errors.email = 'Некорректный адрес электронной почты\''
-            }
-
-            if (!data.login) {
-                errors.login = 'Введите логин';
-            }
-
-            if (!data.password) {
-                errors.password = 'Введите пароль';
-            }
-
-            if (!data.password2 || data.password2 !== data.password) {
-                errors.password2 = 'Пароли не совпадают';
-            }
-
-            return errors;
-        },
+        validate: (data) => {return validate(data, birthDay)},
         onSubmit: (data) => {
-            formik.resetForm();
-            navigate('/login')
-            data && show();
+            request(
+                'http://localhost:8000/user/',
+                'POST',
+                'application/json',
+                {
+                    username: formik.values.login,
+                    telephone: formik.values.telephone,
+                    email: formik.values.email,
+                    firstname: formik.values.name,
+                    patronymic: formik.values.patronymic,
+                    surname: formik.values.surname,
+                    other_names: null,
+                    gender: gender,
+                    date_of_birth: formik.values.birthDay,
+                    password: formik.values.password
+                }
+            ).then(response => {
+                    if (response.ok) {
+                        setResponse(response.json());
+                        navigate('/login')
+                        // data &&
+                        showToast(successToast, 'success', 'Пользователь успешно зарегистрирован');
+                    } else if (response.status === 422) {
+                        showToast(failToast, 'error', 'Неверные данные', 'Такой пользователь уже существует или введены некорректные данные');
+                    } else if (response.status === 500) {
+                        showToast(failToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+                    }
+                }
+            )
         }
     });
+
 
     const isFormFieldInvalid = (name) => !!(formik.touched[name] && formik.errors[name]);
 
@@ -160,7 +138,7 @@ function RegForm() {
                     }
                 }
             />
-            <form className="auth" onSubmit={formik.handleSubmit}>
+            <form className="auth gap-4" onSubmit={formik.handleSubmit}>
                 <span className="p-float-label">
                     <InputText
                         inputid="isu"
@@ -170,7 +148,7 @@ function RegForm() {
                             formik.setFieldValue('isu', e.target.value);
                             setIsu(e.target.value)
                         }}
-                        useGrouping={false}/>
+                    />
                     <label htmlFor="isu">Ису</label>
                 </span>
                 {getFormErrorMessage('isu')}
@@ -183,7 +161,6 @@ function RegForm() {
                             formik.setFieldValue('surname', e.target.value);
                             setSurname(e.target.value)
                         }}
-                        useGrouping={false}
                     />
                     <label htmlFor="surname">Фамилия</label>
                 </span>
@@ -197,7 +174,6 @@ function RegForm() {
                             formik.setFieldValue('name', e.target.value);
                             setName(e.target.value)
                         }}
-                        useGrouping={false}
                     />
                     <label htmlFor="name">Имя</label>
                 </span>
@@ -211,22 +187,21 @@ function RegForm() {
                             formik.setFieldValue('patronymic', e.target.value);
                             setPatronymic(e.target.value)
                         }}
-                        useGrouping={false}
                     />
                     <label htmlFor="patronymic">Отчество (при наличии)</label>
                 </span>
                 {getFormErrorMessage('patronymic')}
                 <span className="flex">
-                    {/*<Toast ref={toast} />*/}
+
                     {radioBtns.map((btn, i) => {
                         return (
                             <div key={i} className="flex align-items-center mr-3">
                                 <RadioButton
                                     {...btn}
-                                    checked={formik.values.gender === btn.value}
                                     onChange={(e) => {
-                                        formik.setFieldValue('gender', e.value);
-                                        setGender(e.target.value)
+                                        let actualValue = (e.value === 'Муж') ? 'male' : 'female';
+                                        formik.setFieldValue('gender', actualValue);
+                                        setGender(actualValue)
                                     }}
                                 />
                                 <label htmlFor={btn.inputId} className="ml-1">
@@ -237,21 +212,19 @@ function RegForm() {
                     })}
                 </span>
                 {getFormErrorMessage('gender')}
-                {/*<span className="p-float-label" style={{paddingTop: 0}}>*/}
                     <Calendar
-                        inputid="birthDay"
-                        value={formik.values.birthDay}
-                        className={classNames({ 'p-invalid': isFormFieldInvalid('birthDay') })}
+                        yearRange="1900:2007"
+                        inputid="birth_date"
+                        value={birthDay}
+                        className={classNames({ 'p-invalid': isFormFieldInvalid('birthDay') }, 'minWidth')}
                         onChange={(e) => {
-                            formik.setFieldValue('birthDay', e.target.value);
                             setBirthDay(e.target.value)
+                            let actualBirthDay = e.target.value.toISOString().slice(0, 10);
+                            formik.setFieldValue('birthDay', actualBirthDay);
                         }}
-                        useGrouping={false}
-                        dateFormat="dd.mm.yy"
-                        placeholder={'Дата рождения'}
+                        dateFormat="yy.mm.dd"
+                        placeholder={"Дата рождения"}
                     />
-                    {/*<label htmlFor="birthDay">Дата рождения</label>*/}
-                {/*</span>*/}
                 {getFormErrorMessage('birthDay')}
                 <span className="p-float-label">
                     <InputText
@@ -259,10 +232,10 @@ function RegForm() {
                         value={formik.values.telephone}
                         className={classNames({ 'p-invalid': isFormFieldInvalid('telephone') })}
                         onChange={(e) => {
-                            formik.setFieldValue('telephone', e.target.value);
-                            setTelephone(e.target.value)
+                            let actualPhone = e.target.value.replace(/^8/, "+7")
+                            formik.setFieldValue('telephone', actualPhone);
+                            setTelephone(actualPhone)
                         }}
-                        useGrouping={false}
                         mask="8 (999) 999-9999"
                     />
                     <label htmlFor="telephone">Телефон</label>
@@ -277,7 +250,6 @@ function RegForm() {
                             formik.setFieldValue('email', e.target.value);
                             setEmail(e.target.value)
                         }}
-                        useGrouping={false} 
                         keyfilter="email"
                     />
                     <label htmlFor="email">Электронная почта</label>
@@ -292,7 +264,6 @@ function RegForm() {
                             formik.setFieldValue('login', e.target.value);
                             setLogin(e.target.value)
                         }}
-                        useGrouping={false}
                     />
                     <label htmlFor="login">Логин</label>
                 </span>
@@ -306,7 +277,6 @@ function RegForm() {
                             formik.setFieldValue('password', e.target.value);
                             setPassword(e.target.value)
                         }}
-                        useGrouping={false}
                         header={header}
                         footer={footer}
                         toggleMask
@@ -324,7 +294,6 @@ function RegForm() {
                             formik.setFieldValue('password2', e.target.value);
                             setPassword2(e.target.value)
                         }}
-                        useGrouping={false}
                         feedback={false}
                         toggleMask/>
                     <label htmlFor="password2">Пароль ещё раз</label>
@@ -332,6 +301,8 @@ function RegForm() {
                 {getFormErrorMessage('password2')}
                 <Button type='submit'>Зарегистрироваться</Button>
             </form>
+            <Toast ref={successToast} />
+            <Toast ref={failToast} />
         </div>
     );
 }

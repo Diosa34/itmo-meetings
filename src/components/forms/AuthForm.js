@@ -10,6 +10,8 @@ import {useFormik} from "formik";
 import {Toast} from "primereact/toast";
 import {classNames} from "primereact/utils";
 import {Divider} from "primereact/divider";
+import request from "../rest";
+import showToast from "../toast";
 
 function AuthForm() {
     const navigate = useNavigate();
@@ -21,17 +23,14 @@ function AuthForm() {
         {label: 'Вход', link: "/login"},
         {label: 'Регистрация', link: "/register"}
     ];
-    const [userData, setUserData] = useState([]);
+    // const [userData, setUserData] = useState([]);
 
-    useEffect(() => {
-        localStorage.setItem('user', JSON.stringify(userData));
-    }, [userData]);
+    // useEffect(() => {
+    //     localStorage.setItem('user', JSON.stringify(userData));
+    // }, [userData]);
 
-    const toast = useRef(null);
-
-    const show = () => {
-        toast.current.show({ severity: 'success', summary: 'Выполнен вход'});
-    };
+    const successToast = useRef(null);
+    const failToast = useRef(null);
 
     const formik = useFormik({
         initialValues: {
@@ -51,10 +50,48 @@ function AuthForm() {
 
             return errors;
         },
-        onSubmit: (data) => {
+        onSubmit: async (data) => {
+            const details = {
+                'username': formik.values.login,
+                'password': formik.values.password,
+            };
+
+            let formBody = [];
+            for (const property in details) {
+                const encodedKey = encodeURIComponent(property);
+                const encodedValue = encodeURIComponent(details[property]);
+                formBody.push(encodedKey + "=" + encodedValue);
+            }
+            formBody = formBody.join("&");
+
+            await fetch('http://localhost:8000/auth/token',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-type': 'application/x-www-form-urlencoded',
+                        'Access-Control-Allow-Origin': 'http://localhost:3000',
+                        'Access-Control-Allow-Credentials': 'true',
+                        'WWW-Authenticate': 'Bearer'
+                    },
+                    body: formBody
+                }).then(async response => {
+                    if (response.ok) {
+                        const token = await response.json()
+                        localStorage.setItem('token', token.access_token)
+                        console.log(localStorage.getItem('token'))
+                        navigate('/main')
+                        showToast(successToast, 'success', 'Пользователь успешно авторизован');
+                    } else if (response.status === 422) {
+                        showToast(failToast, 'error', 'Пользователь не авторизован', 'Некорректный запрос');
+                    } else if (response.status < 500 && response.status > 400) {
+                        showToast(failToast, 'error', 'Пользователь не авторизован', 'Введены некорректные данные');
+                    } else if (response.status === 500) {
+                        showToast(failToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+                    }
+                }
+            )
             formik.resetForm();
-            navigate('/main')
-            data && show();
         }
     });
 
@@ -74,44 +111,40 @@ function AuthForm() {
                     }
                 }
             />
-            <form onSubmit={formik.handleSubmit} className="auth">
+            <form onSubmit={formik.handleSubmit} className="auth gap-4">
                 <span className="p-float-label">
-                    {/*<Toast ref={toast} />*/}
-                    <div className={'widthInput'}>
-                        <InputText
-                            inputid="login"
-                            value={formik.values.login}
-                            className={classNames({ 'p-invalid': isFormFieldInvalid('login') })}
-                            onChange={(e) => {
-                                formik.setFieldValue('login', e.target.value);
-                                setLogin(e.target.value)
-                                }
+                    <InputText
+                        inputid="login"
+                        value={formik.values.login}
+                        className={classNames({ 'p-invalid': isFormFieldInvalid('login') }, 'widthInput')}
+                        onChange={(e) => {
+                            formik.setFieldValue('login', e.target.value);
+                            setLogin(e.target.value)
                             }
-                        />
-                    </div>
+                        }
+                    />
                     <label htmlFor="login">Логин</label>
                 </span>
                 {getFormErrorMessage('login')}
                 <span className="p-float-label">
-                    <Toast ref={toast} />
-                    <div className={'widthInput'}>
-                        <Password
-                            inputid="password"
-                            value={formik.values.password}
-                            className={classNames({ 'p-invalid': isFormFieldInvalid('password') })}
-                            onChange={(e) => {
-                                formik.setFieldValue('password', e.target.value);
-                                setPassword(e.target.value)
-                            }}
-                            toggleMask
-                            feedback={false}
-                        />
-                    </div>
+                    <Password
+                        inputid="password"
+                        value={formik.values.password}
+                        className={classNames({ 'p-invalid': isFormFieldInvalid('password') }, 'widthInput')}
+                        onChange={(e) => {
+                            formik.setFieldValue('password', e.target.value);
+                            setPassword(e.target.value)
+                        }}
+                        toggleMask
+                        feedback={false}
+                    />
                     <label htmlFor="password">Пароль</label>
                 </span>
                 {getFormErrorMessage('password')}
                 <Button type='submit'>Войти</Button>
             </form>
+            <Toast ref={successToast} />
+            <Toast ref={failToast} />
         </div>
     );
 }

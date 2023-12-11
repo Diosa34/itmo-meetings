@@ -11,7 +11,7 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/register" element={<RegForm />} />
-                    <Route path="/login" element={<AuthForm />} />
+                    <Route index path="/login" element={<AuthForm />} />
                     <Route path="/*" element={<Container />} />
                 </Routes>
             </BrowserRouter>
