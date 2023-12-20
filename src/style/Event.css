@@ -1,9 +1,14 @@
-/*.eventInfo*/
-
-.first-col {
-    text-align: left;
+.event-card {
+    margin-top: 5%;
+    margin-left: 20%;
+    margin-right: 20%;
 }
 
-.second-col {
-    text-align: right;
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.box-1 {
+    display: grid;
 }

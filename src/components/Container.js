@@ -6,17 +6,20 @@ import Profile from "./pages/Profile";
 import CreateChannelForm from "./forms/CreateChannelForm";
 import React from "react";
 import Header from "./Header";
+import Channels from "./pages/Channels";
 
 function Container() {
     return (
         <>
             <Header />
             <Routes>
-                <Route path="/main" element={<MainPage />} />
-                <Route path="/event" element={<Event />} />
+                <Route path="/catalog" element={<MainPage />} />
+                    <Route path="/catalog/:id" element={<Event />} />
                 <Route path="/rating" element={<FeedbackForm />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/createChannel" element={<CreateChannelForm />} />
+                <Route path="/channels" element={<Channels />} />
+                <Route path="/:id" element={<Channel />} />
             </Routes>
             <Outlet />
         </>

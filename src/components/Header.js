@@ -7,10 +7,9 @@ import {useNavigate} from "react-router-dom";
 function Header() {
     const [activeIndex, setActiveIndex] = useState(0);
     const items = [
-        {label: 'Главная', icon: 'pi pi-fw pi-home', link: "/main"},
+        {label: 'Главная', icon: 'pi pi-fw pi-home', link: "/catalog"},
         {label: 'Мои каналы', icon: 'pi pi-fw pi-sitemap', link: '/channels'},
         {label: 'Мои мероприятия', icon: 'pi pi-fw pi-megaphone', link: '/events'},
-        {label: 'Мероприятие', icon: 'pi pi-fw pi-megaphone', link: '/event'},
         {icon: 'pi pi-fw pi-user', link: '/profile'}
     ];
     // const [sidebarVisible, setSidebarVisible] = useState(false);

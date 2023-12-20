@@ -39,6 +39,10 @@ export default function AddEvent() {
                 errors.description = 'Description is required.';
             }
 
+            if (!data.description) {
+                errors.description = 'Description is required.';
+            }
+
             return errors;
         },
         onSubmit: (data) => {

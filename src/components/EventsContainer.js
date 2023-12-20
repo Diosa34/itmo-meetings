@@ -10,11 +10,20 @@ import showToast from "./toast";
 export default function EventsContainer() {
     const [events, setEvents] = useState([
         {
-            title: 'Поход в музей',
-            description: 'Развлечения.',
-            start_datetime: 'Запланировано',
-            adress: '5'
-            // match: true
+            title: "My super party",
+            description: "If you will come, you will have unreal emotions.",
+            start_datetime: "2023-12-20T10:54:47.546Z",
+            duration_in_minutes: 15,
+            address: "string",
+            capacity: 4,
+            price: 0,
+            minimum_age: 0,
+            maximum_age: 150,
+            only_for_itmo_students: false,
+            only_for_russians: false,
+            id: 0,
+            channel_id: 0,
+            rating: 0
         }]);
     const [layout, setLayout] = useState('grid');
 
@@ -38,7 +47,6 @@ export default function EventsContainer() {
                     const data = response.json();
                     data.then(value => {
                         setEvents(value)
-                        console.log(value)
                     });
                 } else if (response.status === 401) {
                     navigate('/login')
@@ -110,17 +118,22 @@ export default function EventsContainer() {
                     <div className="flex flex-column align-items-left gap-3 py-5">
                         <div className="text-2xl font-bold">{event.title}</div>
                         <div className="text-l font-light">{event.description.split('.')[0] + '.'}</div>
-                        <div className="flex gap-2 text-l font-light" icon="pi pi-shopping-cart">
-                            <i className="pi pi-tag"></i>
+                        <div className="flex gap-2 text-l font-light" >
+                            <i className="pi pi-clock"></i>
                             {'Когда: ' + event.start_datetime}
                         </div>
-                        <div className="text-l font-light">{'Где: ' + event.address}</div>
-                        <div className="text-l font-light">{event.description.split('.')[0] + '.'}</div>
+                        <div className="flex gap-2 text-l font-light">
+                            <i className="pi pi-map-marker"></i>
+                            {'Где: ' + event.address}
+                        </div>
                         {/*<Rating value={event.rating} readOnly cancel={false}></Rating>*/}
                     </div>
                     <div className="flex align-items-center justify-content-between">
-                        <span className="text-2xl font-semibold">${event.price}</span>
-                        <Button icon="pi pi-shopping-cart" className="p-button-rounded" disabled={event.inventoryStatus === 'OUTOFSTOCK'}></Button>
+                        <Button label="Подробнее" icon="pi pi-arrow-right" text size="small" iconPos="right" onClick={(e) => {
+                            console.log(event.id)
+                            navigate(`/catalog/${event.id}`)
+                        }}/>
+                        {/*<span className="text-2xl font-semibold">${event.price}</span>*/}
                     </div>
                 </div>
             </div>
