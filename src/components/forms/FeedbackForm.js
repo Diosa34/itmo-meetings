@@ -4,7 +4,7 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
 import { classNames } from 'primereact/utils';
 import { Toast } from 'primereact/toast';
-import {Rating} from "@mui/material";
+import {Rating} from "primereact/rating";
 import {Dialog} from "primereact/dialog";
 
 function FeedbackForm({setModalActive, isModalActive}) {
@@ -47,26 +47,10 @@ function FeedbackForm({setModalActive, isModalActive}) {
     };
 
     return (
-            <Dialog header="Header" visible={isModalActive} onHide={() => setModalActive(false)} style={{ width: '50vw' }} footer={footerContent}>
-                <form onSubmit={formik.handleSubmit} className="flex flex-column gap-2">
+            <Dialog header="Отзыв о мероприятии" visible={isModalActive} onHide={() => setModalActive(false)} footer={footerContent}>
+                <form onSubmit={formik.handleSubmit} className="flex flex-column gap-5">
                     <label htmlFor="rating">Оцените меропритятие</label>
                     <Rating className="card flex justify-content-center" name="rating" value={rating} onChange={(e) => setRating(e.value)} cancel={false} />
-                    <span className="p-float-label">
-                        <Toast ref={toast} />
-                        <InputTextarea
-                            inputid="description"
-                            name="description"
-                            rows={4}
-                            cols={30}
-                            className={classNames({ 'p-invalid': isFormFieldInvalid('description') })}
-                            value={formik.values.description}
-                            onChange={(e) => {
-                                formik.setFieldValue('description', e.target.value);
-                            }}
-                        />
-                        <label htmlFor="description">Расскажите организатору о ваших впечатлениях</label>
-                    </span>
-                        {getFormErrorMessage('description')}
                     {/*<Button label="Отправить отзыв" type="submit" icon="pi pi-check" />*/}
                 </form>
             </Dialog>

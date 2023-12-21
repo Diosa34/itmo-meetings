@@ -1,0 +1,15 @@
+.channelContainer {
+    display: flex;
+    align-items: center;
+    grid-template-areas:
+    "A A";
+}
+
+.left-area {
+    grid-area: A;
+}
+
+.right-area {
+    grid-area: A;
+
+}

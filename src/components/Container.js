@@ -6,7 +6,8 @@ import Profile from "./pages/Profile";
 import CreateChannelForm from "./forms/CreateChannelForm";
 import React from "react";
 import Header from "./Header";
-import Channels from "./pages/Channels";
+import Channels from "./pages/ChannelsList";
+import Channel from "./pages/Channel";
 
 function Container() {
     return (
@@ -19,7 +20,7 @@ function Container() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/createChannel" element={<CreateChannelForm />} />
                 <Route path="/channels" element={<Channels />} />
-                <Route path="/:id" element={<Channel />} />
+                <Route path="/channels/:id" element={<Channel />} />
             </Routes>
             <Outlet />
         </>

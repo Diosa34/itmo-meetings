@@ -11,7 +11,7 @@
 .left, .middle, .right {
     /*display: grid;*/
     place-items: center;
-    padding: 2em;
+    padding: 2rem;
 }
 
 .title {

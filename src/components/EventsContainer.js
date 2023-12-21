@@ -7,59 +7,28 @@ import { Tag } from 'primereact/tag';
 import {useNavigate} from "react-router-dom";
 import showToast from "./toast";
 
-export default function EventsContainer() {
-    const [events, setEvents] = useState([
-        {
-            title: "My super party",
-            description: "If you will come, you will have unreal emotions.",
-            start_datetime: "2023-12-20T10:54:47.546Z",
-            duration_in_minutes: 15,
-            address: "string",
-            capacity: 4,
-            price: 0,
-            minimum_age: 0,
-            maximum_age: 150,
-            only_for_itmo_students: false,
-            only_for_russians: false,
-            id: 0,
-            channel_id: 0,
-            rating: 0
-        }]);
+export default function EventsContainer({events}) {
+    // const [events, setEvents] = useState([
+    //     {
+    //         title: "My super party",
+    //         description: "If you will come, you will have unreal emotions.",
+    //         start_datetime: "2023-12-20T10:54:47.546Z",
+    //         duration_in_minutes: 15,
+    //         address: "string",
+    //         capacity: 4,
+    //         price: 0,
+    //         minimum_age: 0,
+    //         maximum_age: 150,
+    //         only_for_itmo_students: false,
+    //         only_for_russians: false,
+    //         id: 0,
+    //         channel_id: 0,
+    //         rating: 0
+    //     }]);
     const [layout, setLayout] = useState('grid');
 
     const navigate = useNavigate();
     const cardToast = useRef(null);
-
-    useEffect(() => {
-        const token = 'Bearer ' + localStorage.getItem('token')
-        fetch('http://localhost:8000/meeting/list/',
-            {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
-                    'Access-Control-Allow-Credentials': 'true',
-                    'Authorization': token != null ? token : "",
-                }
-            }
-        ).then(response => {
-                if (response.ok) {
-                    const data = response.json();
-                    data.then(value => {
-                        setEvents(value)
-                    });
-                } else if (response.status === 401) {
-                    navigate('/login')
-                    // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
-                } else if (response.status === 422) {
-                    // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
-                } else if (response.status === 500) {
-                    // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
-                }
-            }
-        )
-    }, [navigate]);
-
 
     const getSeverity = (event) => {
         switch (event.inventoryStatus) {

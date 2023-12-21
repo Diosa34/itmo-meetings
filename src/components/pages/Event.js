@@ -2,7 +2,7 @@ import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 import '../../style/Event.css';
 import FeedbackForm from "../forms/FeedbackForm";
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 
 
@@ -27,6 +27,7 @@ function Event() {
             channel_id: 0,
             rating: 0
         }])
+    const [channel, setChannel] = useState()
 
     useEffect(() => {
         const token = 'Bearer ' + localStorage.getItem('token')
@@ -56,7 +57,35 @@ function Event() {
                 }
             }
         )
-    }, [navigate, params.id]);
+
+        fetch(`http://localhost:8000/channel/${event.channel_id}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                }
+            }
+        ).then(response => {
+                if (response.ok) {
+                    const data = response.json();
+                    data.then(value => {
+                        setChannel(value)
+                    });
+                } else if (response.status === 401) {
+                    navigate('/login')
+                    // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
+                } else if (response.status === 422) {
+                    // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
+                } else if (response.status === 500) {
+                    // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+                }
+            }
+        )
+    }, [event.channel_id, navigate, params.id]);
+
 
     const age = () => {
         let restriction = `нет.`
@@ -81,13 +110,17 @@ function Event() {
                     <label className="first-col">Цена: {event.price} руб.</label>
                     <label className="first-col">Возрастные ограничения: {age()}</label>
                     <label className="first-col">Только для студентов ИТМО: {event.only_for_itmo_students ? "да." : "нет."}</label>
-                    <label className="first-col">Только для граждан РФ: {event.only_for_russians ? "да." : "нет."} руб.</label>
+                    <label className="first-col">Только для граждан РФ: {event.only_for_russians ? "да." : "нет."}</label>
+
                 </div>
                 <div className="box-2">
                     <Button label="Отправить заявку"  icon="pi pi-plus" iconPos="right" text raised />
+                    <Button label="Перейти в канал" icon="pi pi-arrow-right" text size="small" iconPos="right" onClick={(e) => {
+                        navigate(`/channels/${event.channel_id}`)
+                    }}/>
                 </div>
                     <FeedbackForm setModalActive={setModalActive} isModalActive={isModalActive}/>
-                        {/*<Button label="Оставить отзыв" onClick={() => setModalActive(true)} icon="pi pi-check" iconPos="right" text raised />*/}
+                        <Button label="Оставить отзыв" onClick={() => setModalActive(true)} icon="pi pi-check" iconPos="right" text raised />
             </div>
                 <Divider />
             <p>

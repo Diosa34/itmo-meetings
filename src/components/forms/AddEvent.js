@@ -35,12 +35,26 @@ export default function AddEvent() {
         validate: (data) => {
             let errors = {};
 
-            if (!data.description) {
-                errors.description = 'Description is required.';
+            if (!data.title) {
+                errors.title = 'Введите название мероприятия.';
             }
 
-            if (!data.description) {
-                errors.description = 'Description is required.';
+            if (!data.start_datetime) {
+                errors.start_datetime = 'Выберите дату и время начала мероприятия.';
+            } else if (data.start_datetime.getTime() < new Date().getTime()) {
+                errors.start_datetime = 'Некорректная дата, этот день уже в прошлом.';
+            }
+
+            if (!data.address) {
+                errors.address = 'Выберите место проведения мероприятия.';
+            }
+
+            if (!data.capacity) {
+                errors.capacity = 'Максиимальное количество участников должно быть больше 0.';
+            }
+
+            if (!data.price) {
+                errors.price = 'Если участие бесплатное, введите 0, иначе стоимость участия.';
             }
 
             return errors;
@@ -57,7 +71,7 @@ export default function AddEvent() {
 
 
     return (
-        <>
+        <div>
             <Dialog header="Новое мероприятие" visible={isModalActive} onHide={() => setModalActive(false)} style={{ width: '50vw' }} footer={footerContent}>
                 <form onSubmit={formik.handleSubmit} className="flex flex-column gap-2">
                     <span className="p-float-label">
@@ -210,6 +224,6 @@ export default function AddEvent() {
                 </form>
             </Dialog>
             <Button label="Создать мероприятие" onClick={() => setModalActive(true)} icon="pi pi-plus" iconPos="right" text raised />
-        </>
+        </div>
     )
 }

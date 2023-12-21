@@ -6,31 +6,34 @@ import { Button } from 'primereact/button';
 import { classNames } from 'primereact/utils';
 import { Toast } from 'primereact/toast';
 import {InputText} from "primereact/inputtext";
+import {Dialog} from "primereact/dialog";
 
 export default function CreateChannelForm() {
     const [title, setTitle] = useState("");
     const toast = useRef(null);
+    const [isModalActive, setModalActive] = useState(false);
 
-    const show = () => {
-        toast.current.show({ severity: 'success', summary: 'Form Submitted', detail: formik.values.description  });
-    };
+    const footerContent = (
+        <div >
+            <Button className={'footer'} label="Создать канал" type="submit" icon="pi pi-check" />
+        </div>
+    );
 
     const formik = useFormik({
         initialValues: {
+            title: '',
             description: ''
         },
         validate: (data) => {
             let errors = {};
 
-            if (!data.description) {
-                errors.description = 'Description is required.';
+            if (!data.title) {
+                errors.title = 'Введите название канала.';
             }
 
             return errors;
         },
         onSubmit: (data) => {
-            data && show();
-            formik.resetForm();
         }
     });
 
@@ -41,13 +44,14 @@ export default function CreateChannelForm() {
     };
 
     return (
-        <div className="card flex justify-content-center p-5 shadow-2 border-round">
+        <div>
+        <Dialog header="Новый канал" className="card flex justify-content-center shadow-2 border-round" visible={isModalActive} onHide={() => setModalActive(false)} style={{ width: '40%' }} footer={footerContent}>
             <form onSubmit={formik.handleSubmit} className="flex flex-column gap-2">
-                <label>Создание канала</label>
                 <span className="p-float-label">
-                    <InputText id="title" value={title} onChange={(e) => setTitle(e.target.value)}/>
+                    <InputText id="title" value={formik.values.title} onChange={(e) => setTitle(e.target.value)}/>
                     <label htmlFor="title">Название канала</label>
                 </span>
+                {getFormErrorMessage('title')}
                 <span className="p-float-label">
                     <Toast ref={toast} />
                     <InputTextarea
@@ -65,8 +69,9 @@ export default function CreateChannelForm() {
                     <label htmlFor="description">Описание канала</label>
                 </span>
                 {getFormErrorMessage('description')}
-                <Button label="Создать канал" type="submit" icon="pi pi-check" />
             </form>
+        </Dialog>
+        <Button label="Создать канал" onClick={() => setModalActive(true)} icon="pi pi-plus" iconPos="right" text raised />
         </div>
     )
 }
