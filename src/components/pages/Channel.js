@@ -2,16 +2,32 @@ import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
 import EventsContainer from "../EventsContainer";
 import '../../style/Channel.css';
-import {AccordionTab} from "primereact/accordion";
-import {Accordion} from "@mui/material";
-import {OrderList} from "primereact/orderlist";
 import {Toast} from "primereact/toast";
-import showToast from "../toast";
 import ErrorPage from "./ErrorPage";
+import AddEvent from "../forms/AddEvent";
+import {Button} from "primereact/button";
+import {Sidebar} from "primereact/sidebar";
+import WaitModal from "../forms/waitModal";
 
 export default function Channel() {
     const params = useParams();
     const navigate = useNavigate();
+    const [members: [], setMembers] = useState();
+    const [me, setMe] = useState({
+        "username": "elison98",
+        "telephone": "+79001234567",
+        "email": "elison@example.com",
+        "firstname": "Elison",
+        "patronymic": null,
+        "surname": "Argent",
+        "other_names": null,
+        "gender": "male",
+        "date_of_birth": "2000-01-01",
+        "id": 0,
+        "referrer_id": 0,
+        "confidentiality": 76,
+        "is_staff": false
+    })
     const [channel, setChannel] = useState({
             name: "My super channel name",
             description: "Here plain text",
@@ -23,17 +39,13 @@ export default function Channel() {
             is_active: true
         }
     )
-
-    const [members, setMembers] = useState();
     const [events, setEvents] = useState();
-    const [requestError, setRequestError] = useState({
-        code: 500,
-        title: 'Ошибка',
-        message: 'Ошибка сервера, не принимайте на свой счёт'
-    })
-
+    const [requestError, setRequestError] = useState()
+    const [visibleRight, setVisibleRight] = useState(false);
+    const [waitModal, setWaitModal] = useState(false)
+    const token = 'Bearer ' + localStorage.getItem('token')
+    
     useEffect(() => {
-        const token = 'Bearer ' + localStorage.getItem('token')
         fetch(`http://localhost:8000/channel/${params.id}/`,
             {
                 method: 'GET',
@@ -49,7 +61,6 @@ export default function Channel() {
                     const data = response.json();
                     data.then(value => {
                         setChannel(value)
-                        console.log(value)
                     });
                 } else if (response.status === 401) {
                     navigate('/login')
@@ -72,10 +83,9 @@ export default function Channel() {
                 }
             }
         )
-    }, []);
+    }, [navigate, params.id, token]);
 
     useEffect(() => {
-        const token = 'Bearer ' + localStorage.getItem('token')
         fetch('http://localhost:8000/meeting/list/',
             {
                 method: 'GET',
@@ -90,8 +100,7 @@ export default function Channel() {
                 if (response.ok) {
                     const data = response.json();
                     data.then(value => {
-                        // setEvents(value.filter((elem) => elem.channel_id === channel.id))
-                        console.log(value)
+                        setEvents(value.filter((elem) => elem.channel_id === channel.id))
                     });
                 } else if (response.status === 401) {
                     navigate('/login')
@@ -109,10 +118,7 @@ export default function Channel() {
                 }
             }
         )
-    }, [navigate]);
 
-    useEffect(() => {
-        const token = 'Bearer ' + localStorage.getItem('token')
         fetch(`http://localhost:8000/channel/${params.id}/member/list/`,
             {
                 method: 'GET',
@@ -128,49 +134,158 @@ export default function Channel() {
                     const data = response.json();
                     data.then(value => {
                         setMembers(value)
-                        console.log(value)
                     });
                 } else if (response.status === 401) {
                     navigate('/login')
                     // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
                 } else if (response.status === 422) {
                     setRequestError({code: response.status,
-                        title: 'Список участников канала не был загружен',
+                        title: 'Список мероприятий канала не был загружен',
                         message: 'Сломанный запрос'})
                     // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
                 } else if (response.status === 500) {
                     setRequestError({code: response.status,
-                        title: 'Список участников канала не был загружен',
+                        title: 'Список мероприятий канала не был загружен',
                         message: 'Ошибка сервера, не принимайте на свой счёт'})
                     // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
-                } else if (response.status === 403) {
-                    setRequestError({
-                        code: response.status,
-                        title: 'Список участников канала не был загружен',
-                        message: 'Доступ к каналу ограничен для данного пользователя'})
-                    // showToast(cardToast, 'error', 'Ошибка', 'Участники канала недоступны');
                 }
             }
         )
-    }, [navigate, params.id]);
+
+        fetch(`http://localhost:8000/user/me/`,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                }
+            }
+        ).then(response => {
+                if (response.ok) {
+                    const data = response.json();
+                    data.then(value => {
+                        setMe(value)
+                    });
+                } else if (response.status === 401) {
+                    navigate('/login')
+                    // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
+                } else if (response.status === 422) {
+                    setRequestError({code: response.status,
+                        title: 'Список мероприятий канала не был загружен',
+                        message: 'Сломанный запрос'})
+                    // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
+                } else if (response.status === 500) {
+                    setRequestError({code: response.status,
+                        title: 'Список мероприятий канала не был загружен',
+                        message: 'Ошибка сервера, не принимайте на свой счёт'})
+                    // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+                }
+            }
+        )
+    }, [channel.id, navigate, token]);
 
     const failToast = useRef();
 
-    const itemTemplate = (member) => {
-        return (
-            <div className="flex flex-wrap p-2 align-items-center gap-3">
-                <img className="w-4rem shadow-2 flex-shrink-0 border-round"/>
-                <div className="flex-1 flex flex-column gap-2 xl:mr-8">
-                    <span className="font-bold">{member.name}</span>
-                    <div className="flex align-items-center gap-2">
-                        <i className="pi pi-tag text-sm"></i>
-                        <span>{member.category}</span>
-                    </div>
-                </div>
-                <span className="font-bold text-900">${member.price}</span>
-            </div>
-        );
-    };
+    const deleteChannel = () => {
+        fetch(`http://localhost:8000/channel/${params.id}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                }
+            }
+        ).then(response => {
+                if (response.ok) {
+                    const data = response.json();
+                } else if (response.status === 401) {
+                    navigate('/login')
+                } else if (response.status === 422) {
+                    setRequestError({code: response.status,
+                        title: 'Список мероприятий канала не был загружен',
+                        message: 'Сломанный запрос'})
+                    // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
+                } else if (response.status === 500) {
+                    setRequestError({code: response.status,
+                        title: 'Список мероприятий канала не был загружен',
+                        message: 'Ошибка сервера, не принимайте на свой счёт'})
+                    // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+                }
+            }
+        )
+    }
+
+    const leaveChannel = () => {
+        fetch(`http://localhost:8000/channel/${params.id}/subscribe/`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                }
+            }
+        ).then(response => {
+                if (response.ok) {
+                    const data = response.json();
+                } else if (response.status === 401) {
+                    navigate('/login')
+                } else if (response.status === 422) {
+                    setRequestError({code: response.status,
+                        title: 'Список мероприятий канала не был загружен',
+                        message: 'Сломанный запрос'})
+                    // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
+                } else if (response.status === 500) {
+                    setRequestError({code: response.status,
+                        title: 'Список мероприятий канала не был загружен',
+                        message: 'Ошибка сервера, не принимайте на свой счёт'})
+                    // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+                }
+            }
+        )
+    }
+
+    const joinToChannel = () => {
+        fetch(`http://localhost:8000/channel/${channel.id}/subscribe/`,
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                },
+                body: JSON.stringify({
+                    notify_about_meeting: false
+                })
+            }
+        ).then(response => {
+                if (response.ok) {
+                    const data = response.json();
+                } else if (response.status === 401) {
+                    navigate('/login')
+                } else if (response.status === 422) {
+                    setRequestError({code: response.status,
+                        title: 'Список мероприятий канала не был загружен',
+                        message: 'Сломанный запрос'})
+                    // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
+                } else if (response.status === 500) {
+                    setRequestError({code: response.status,
+                        title: 'Список мероприятий канала не был загружен',
+                        message: 'Ошибка сервера, не принимайте на свой счёт'})
+                    // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+                }
+            }
+        )
+    }
 
     if (requestError) {
         return (
@@ -178,24 +293,61 @@ export default function Channel() {
         )
     } else {
         return (
-            <div className=".channelContainer">
-                <div className="left-area gap-2 p-6">
-                    <h1>{channel.name}</h1>
+            <div className="channelContainer">
+                <div className="left-area gap-5 p-5">
+                    <div className="container">
+                        <div className="box-1">
+                            <h1>{channel.name}</h1>
+                        </div>
+                        <div className="box-2">
+                        </div>
+                    </div>
+                    <p className="text-xl">{channel.description}</p>
                     <EventsContainer events={events}/>
                 </div>
-                <div className="right-area">
-                    <Accordion activeIndex={0}>
-                        <AccordionTab header="Участники канала">
-                            <OrderList value={members}
-                                // onChange={(e) => setMembers(e.value)}
-                                       itemTemplate={itemTemplate}></OrderList>
-                        </AccordionTab>
-                        <AccordionTab header="Менеджеры канала">
-                            <OrderList value={members}
-                                // onChange={(e) => setMembers(e.value)}
-                                       itemTemplate={itemTemplate}></OrderList>
-                        </AccordionTab>
-                    </Accordion>
+                <div className="p-5 right-area">
+                    <div className="flex gap-2 justify-content-center">
+                        <Button icon="pi pi-arrow-left" onClick={() => setVisibleRight(true)} />
+                    </div>
+                    <Sidebar visible={visibleRight && (members.filter((elem) => {
+                        return elem.user_id === me.id}).length === 0)} position="right" onHide={() => setVisibleRight(false)}>
+                        <div>
+                            <h2>Добро пожаловать!</h2>
+                            <p>
+                                Вы можете стать участником канала.
+                            </p>
+                            <Button label="Вступить в канал"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToChannel}/>
+                        </div>
+                    </Sidebar>
+                    <Sidebar visible={visibleRight && (members.filter((elem) => {return elem.user_id === me.id && elem.permissions === 0}).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
+                        <div>
+                            <h2>Добро пожаловать!</h2>
+                            <p>
+                                Ваша заявка на добавление в канал на рассмотрении.
+                            </p>
+                        </div>
+                    </Sidebar>
+                    <Sidebar visible={visibleRight && (members.filter((elem) => (elem.user_id === me.id && elem.is_owner)).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
+                        <div className="gap-5">
+                            <h2>Добро пожаловать!</h2>
+                            <p>
+                                Вы являетесь владельцем канала.
+                            </p>
+                            <Button label="Удалить канал"  icon="pi pi-times" iconPos="right" outlined onClick={deleteChannel}/>
+                            <p></p>
+                            <Button label="Заявки на вступление"  icon="pi pi-user" iconPos="right" outlined onClick={setWaitModal}/>
+                            <WaitModal isModalActive={waitModal} setModalActive={setWaitModal} channel_id={params.id} users={members}/>
+                        </div>
+                    </Sidebar>
+                    <Sidebar visible={visibleRight && (members.filter((elem) => {return elem.user_id === me.id && elem.permissions !== 0 && !elem.is_owner}).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
+                        <div>
+                            <h2>Добро пожаловать!</h2>
+                            <p>
+                                Вы являетесь участником канала.
+                            </p>
+                            <Button label="Отписаться" icon="pi pi-minus" iconPos="right" outlined onClick={leaveChannel}/>
+                        </div>
+                    </Sidebar>
                 </div>
                 <Toast ref={failToast} />
             </div>

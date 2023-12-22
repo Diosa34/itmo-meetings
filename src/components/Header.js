@@ -9,7 +9,6 @@ function Header() {
     const items = [
         {label: 'Главная', icon: 'pi pi-fw pi-home', link: "/catalog"},
         {label: 'Мои каналы', icon: 'pi pi-fw pi-sitemap', link: '/channels'},
-        {label: 'Мои мероприятия', icon: 'pi pi-fw pi-megaphone', link: '/events'},
         {icon: 'pi pi-fw pi-user', link: '/profile'}
     ];
     // const [sidebarVisible, setSidebarVisible] = useState(false);

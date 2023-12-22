@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from "react";
 
 import '../../style/MainPage.css';
-import AddEvent from "../forms/AddEvent";
-import {TabMenu} from "primereact/tabmenu";
 import {useNavigate} from "react-router-dom";
-import {Rating} from "primereact/rating";
 import {Tag} from "primereact/tag";
 import {Button} from "primereact/button";
 import { DataView } from 'primereact/dataview';
@@ -47,10 +44,6 @@ function Channels() {
         ]);
 
     const [activeIndex, setActiveIndex] = useState(0);
-    const items = [
-        {label: 'Мои каналы'},
-        {label: 'Все каналы'}
-    ];
 
     const navigate = useNavigate();
 
@@ -117,28 +110,38 @@ function Channels() {
     }, [navigate])
 
     // permissions: Literal['OWNER', 'ADMIN', 'EDITOR', 'MEMBER', 'BLOCKED']
+    const role = (id) => {
+        if (activeIndex === 1) {
+            return
+        }
+
+        const member = myChannels.filter((elem) => elem.channel.id === id)[0]
+        if (member.is_owner) {
+            return "Владелец"
+        } else if (member.permissions === 0) {
+            return "В ожидании"
+        } else if (member.permissions !== 0 && !member.is_owner) {
+            return "Участник"
+        }
+    }
 
     const itemTemplate = (channel) => {
         return (
             <div className="col-12">
                 <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
-                    {/*<img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" />*/}
                     <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
                         <div className="flex flex-column align-items-center sm:align-items-start gap-3">
-                            <div className="text-2xl font-bold text-900">{channel.name}</div>
-                            <div className="text-xl font-light text-900">{channel.description}</div>
-                            <Rating value={channel.rating} readOnly cancel={false}></Rating>
-                            <div className="flex align-items-center gap-3">
-                                <span className="flex align-items-center gap-2">
-                                    <i className="pi pi-tag"></i>
-                                    <span className="font-semibold">{channel.category}</span>
-                                </span>
-                                {/*<Tag value={channel.inventoryStatus} severity={getSeverity(channel)}></Tag>*/}
+                            <div className="grid gap-3">
+                                <div className="text-2xl font-bold text-900">{channel.name}</div>
+                                <Tag visible={activeIndex === 0} value={role(channel.id)} severity='warning'></Tag>
                             </div>
+                            <div className="text-xl font-light text-900">{channel.description}</div>
+                            <div className="text-xl font-light text-900">Количество участников: {channel.members_cnt}</div>
                         </div>
                         <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-                            <span className="text-2xl font-semibold">${channel.price}</span>
-                            <Button icon="pi pi-shopping-cart" className="p-button-rounded" disabled={channel.inventoryStatus === 'OUTOFSTOCK'}></Button>
+                            <Button visible={!channel.is_personal} label="Перейти в канал" icon="pi pi-arrow-right" text raised size="small" iconPos="right" onClick={(e) => {
+                                navigate(`/channels/${channel.id}`)
+                            }}/>
                         </div>
                     </div>
                 </div>
@@ -157,12 +160,12 @@ function Channels() {
                 </div>
             </div>
 
-            <TabView>
+            <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
                 <TabPanel header="Мои каналы">
-                    <DataView value={myChannels.map((elem) => elem.channel)} itemTemplate={itemTemplate} />
+                    <DataView value={myChannels.map((elem) => elem.channel).filter((elem) => !elem.is_personal)} itemTemplate={itemTemplate} />
                 </TabPanel>
                 <TabPanel header="Все каналы">
-                    <DataView value={allChannels} itemTemplate={itemTemplate} />
+                    <DataView value={allChannels.filter((elem) => !elem.is_personal)} itemTemplate={itemTemplate} />
                 </TabPanel>
             </TabView>
         </div>

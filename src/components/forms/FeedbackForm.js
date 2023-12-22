@@ -1,58 +1,123 @@
 import React, {useRef, useState} from "react";
-import { useFormik } from 'formik';
-import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
-import { classNames } from 'primereact/utils';
-import { Toast } from 'primereact/toast';
 import {Rating} from "primereact/rating";
 import {Dialog} from "primereact/dialog";
+import showToast from "../toast";
+import {Toast} from "primereact/toast";
+import somePost from "../somePost";
 
-function FeedbackForm({setModalActive, isModalActive}) {
-    const [rating, setRating] = useState(null);
+function FeedbackForm({setModalActive, isModalActive, isRatingExists, actualRating=0, meeting_id}) {
+    const [rating, setRating] = useState(actualRating);
     const toast = useRef(null);
+    const token = 'Bearer ' + localStorage.getItem('token')
+
+    const show = (actualToast, severity, summary, detail) => {
+        actualToast.current.show({ severity: severity, summary: summary, detail: detail});
+    };
+
+    const createFeedback = async () => {
+        await fetch(`http://localhost:8000/meeting/${meeting_id}/feedback/`,
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Content-type': 'application/json',
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                },
+                body: JSON.stringify(
+                    {
+                        rate: rating
+                    }
+                )
+            })
+            .then(async response => {
+                if (response.ok) {
+                    setModalActive(false)
+                    show(toast, 'success', 'Успешно', 'Ваш отзыв записан.');
+                } else if (response.status === 422) {
+                    show(toast, 'error', 'Отзыв не отправлен', 'Некорректный запрос');
+                } else if (response.status === 409) {
+                    showToast(toast, 'error', 'Отзыв не отправлен', 'Конфликт');
+                } else if (response.status === 500) {
+                    showToast(toast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+                }
+            }
+        )
+    }
+
+    const editFeedback = async () => {
+        await fetch(`http://localhost:8000/meeting/${meeting_id}/feedback/`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                },
+                body: JSON.stringify(
+                    {
+                        rate: rating
+                    }
+                )
+            }).then(async response => {
+                if (response.ok) {
+                    setModalActive(false)
+                    show(toast, 'success', 'Успешно', 'Ваш отзыв изменён.');
+                } else if (response.status === 422) {
+                    show(toast, 'error', 'Отзыв не отправлен', 'Некорректный запрос');
+                } else if (response.status === 409) {
+                    showToast(toast, 'error', 'Отзыв не отправлен', 'Конфликт');
+                } else if (response.status === 500) {
+                    showToast(toast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+                }
+            }
+        )
+    }
+
+    const deleteFeedback = async () => {
+        await fetch(`http://localhost:8000/meeting/${meeting_id}/feedback/`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                },
+                body: JSON.stringify({rate: rating})
+            }).then(async response => {
+                if (response.ok) {
+                    setModalActive(false)
+                    show(toast, 'success', 'Удалён', 'Ваш отзыв удалён.');
+                } else if (response.status === 422) {
+                    show(toast, 'error', 'Отзыв не отправлен', 'Некорректный запрос');
+                } else if (response.status === 409) {
+                    showToast(toast, 'error', 'Отзыв не отправлен', 'Конфликт');
+                } else if (response.status === 500) {
+                    showToast(toast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+                }
+            }
+        )
+    }
 
     const footerContent = (
         <div>
-            <Button label="Отправить отзыв" type="submit" icon="pi pi-check" />
+            <Button visible={isRatingExists} label="Изменить отзыв" type="submit" icon="pi pi-pencil" onClick={editFeedback}/>
+            <Button visible={!isRatingExists} label="Отправить отзыв" type="submit" icon="pi pi-check" onClick={createFeedback}/>
+            <Button visible={isRatingExists} label="Удалить отзыв" className="p-button-error" type="submit" icon="pi pi-times" onClick={deleteFeedback}/>
         </div>
     );
 
-    const show = () => {
-        toast.current.show({ severity: 'success', summary: 'Form Submitted', detail: formik.values.description  });
-    };
-
-    const formik = useFormik({
-        initialValues: {
-            description: ''
-        },
-        validate: (data) => {
-            let errors = {};
-
-            if (!data.description) {
-                errors.description = 'Description is required.';
-            }
-
-            return errors;
-        },
-        onSubmit: (data) => {
-            data && show();
-            formik.resetForm();
-        }
-    });
-
-    const isFormFieldInvalid = (name) => !!(formik.touched[name] && formik.errors[name]);
-
-    const getFormErrorMessage = (name) => {
-        return isFormFieldInvalid(name) ? <small className="p-error">{formik.errors[name]}</small> : <small className="p-error">&nbsp;</small>;
-    };
-
     return (
             <Dialog header="Отзыв о мероприятии" visible={isModalActive} onHide={() => setModalActive(false)} footer={footerContent}>
-                <form onSubmit={formik.handleSubmit} className="flex flex-column gap-5">
+                <form className="flex flex-column gap-5">
                     <label htmlFor="rating">Оцените меропритятие</label>
                     <Rating className="card flex justify-content-center" name="rating" value={rating} onChange={(e) => setRating(e.value)} cancel={false} />
-                    {/*<Button label="Отправить отзыв" type="submit" icon="pi pi-check" />*/}
                 </form>
+                <Toast ref={toast} />
             </Dialog>
     )
 }

@@ -1,12 +1,12 @@
 .channelContainer {
-    display: flex;
-    align-items: center;
+    display: grid;
+    /*align-items: start;*/
     grid-template-areas:
-    "A A";
+    "B B B B B B B B A";
 }
 
 .left-area {
-    grid-area: A;
+    grid-area: B;
 }
 
 .right-area {
