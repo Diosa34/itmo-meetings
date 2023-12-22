@@ -163,7 +163,7 @@ export default function AddEvent() {
                                 elem.channel.name = 'От своего имени'
                             }
                             return elem.channel
-                        }))
+                        }).filter((elem) => elem.permissions !== 0))
                         }
                     );
                 } else if (response.status === 401) {

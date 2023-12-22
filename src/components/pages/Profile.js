@@ -207,6 +207,7 @@ function Profile() {
                                 }} autoFocus />
                             </InplaceContent>
                     </Inplace>
+                    <Button label="Выйти" severity="warning" outlined onClick={navigate('/login')}/>
                     <Button label="Удалить профиль" severity="danger" outlined onClick={deleteAccount}/>
                 </div>
                 <div className="middle">
