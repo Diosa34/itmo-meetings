@@ -61,6 +61,10 @@ export default function AddEvent() {
                 errors.address = 'Выберите место проведения мероприятия.';
             }
 
+            if (data.duration_in_minutes <= 0) {
+                errors.duration_in_minutes = 'Введите предполагаемую длительность.';
+            }
+
             if (!data.capacity) {
                 errors.capacity = 'Максиимальное количество участников должно быть больше 0.';
             }

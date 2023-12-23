@@ -5,29 +5,13 @@ import FeedbackForm from "../forms/FeedbackForm";
 import React, {useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {Toast} from "primereact/toast";
+import useEvent from "../useEvent";
 
 
 function Event() {
     const params = useParams();
     const navigate = useNavigate();
     const [isModalActive, setModalActive] = useState(false);
-    const [event, setEvent] = useState([
-        {
-            title: "Моя супер-вечеринка",
-            description: "If you will come, you will have unreal emotions.",
-            start_datetime: "2023-12-20T10:54:47.546Z",
-            duration_in_minutes: 15,
-            address: "string",
-            capacity: 4,
-            price: 0,
-            minimum_age: 0,
-            maximum_age: 150,
-            only_for_itmo_students: false,
-            only_for_russians: false,
-            id: 0,
-            channel_id: 0,
-            rating: 0
-        }])
     const [isMember, setIsMember] = useState(false)
     const [channel, setChannel] = useState({
         "name": "My super channel name",
@@ -41,6 +25,7 @@ function Event() {
     })
     const [feedback, setFeedback] = useState()
     const token = 'Bearer ' + localStorage.getItem('token')
+    const {event, isLoading, error} = useEvent(params.id, token)
 
     const toast = useRef(null);
 
@@ -49,34 +34,31 @@ function Event() {
     };
 
     useEffect(() => {
-        fetch(`http://localhost:8000/meeting/${params.id}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
-                    'Access-Control-Allow-Credentials': 'true',
-                    'Authorization': token != null ? token : "",
-                }
-            }
-        ).then(response => {
-                if (response.ok) {
-                    const data = response.json();
-                    data.then(value => {
-                        setEvent(value)
-                    });
-                } else if (response.status === 401) {
-                    navigate('/login')
-                    // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
-                } else if (response.status === 422) {
-                    // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
-                } else if (response.status === 500) {
-                    // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
-                }
-            }
-        )
+        // await fetch(`http://localhost:8000/meeting/${params.id}/`,
+        //     {
+        //         method: 'GET',
+        //         headers: {
+        //             'Accept': 'application/json',
+        //             'Access-Control-Allow-Origin': 'http://localhost:3000',
+        //             'Access-Control-Allow-Credentials': 'true',
+        //             'Authorization': token != null ? token : "",
+        //         }
+        //     }
+        // ).then(async response => {
+        //         if (response.ok) {
+        //             await response.json().then(value => setEvent(value));
+        //         } else if (response.status === 401) {
+        //             navigate('/login')
+        //             // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
+        //         } else if (response.status === 422) {
+        //             // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
+        //         } else if (response.status === 500) {
+        //             // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+        //         }
+        //     }
+        // )
 
-        fetch(`http://localhost:8000/channel/${event.channel_id}`,
+        fetch(`http://localhost:8000/channel/${event.channel_id}/`,
             {
                 method: 'GET',
                 headers: {
@@ -104,7 +86,7 @@ function Event() {
             }
         )
 
-        fetch(`http://localhost:8000/meeting/${event.id}/feedback/`,
+        fetch(`http://localhost:8000/meeting/${params.id}/feedback/`,
             {
                 method: 'GET',
                 headers: {
@@ -145,7 +127,7 @@ function Event() {
                 if (response.ok) {
                     const data = response.json();
                     data.then(value => {
-                        setIsMember(!value.filter((i) => event.id === i.id).length === 0)
+                        setIsMember(!value.filter((i) => params.id === i.id).length === 0)
                     });
                 } else if (response.status === 401) {
                     navigate('/login')
@@ -157,10 +139,10 @@ function Event() {
                 }
             }
         )
-    }, [event.channel_id, event.id, navigate, params.id, token]);
+    }, [navigate, params.id, token]);
 
     const joinToMeeting = () => {
-        fetch(`http://localhost:8000/meeting/${event.id}/member/`,
+        fetch(`http://localhost:8000/meeting/${params.id}/member/`,
             {
                 method: 'POST',
                 headers: {
@@ -186,7 +168,7 @@ function Event() {
     }
 
     const leftMeeting = () => {
-        fetch(`http://localhost:8000/meeting/${event.id}/member/me/`,
+        fetch(`http://localhost:8000/meeting/${params.id}/member/me/`,
             {
                 method: 'DELETE',
                 headers: {

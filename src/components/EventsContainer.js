@@ -8,23 +8,6 @@ import {useNavigate} from "react-router-dom";
 import showToast from "./toast";
 
 export default function EventsContainer({events}) {
-    // const [events, setEvents] = useState([
-    //     {
-    //         title: "My super party",
-    //         description: "If you will come, you will have unreal emotions.",
-    //         start_datetime: "2023-12-20T10:54:47.546Z",
-    //         duration_in_minutes: 15,
-    //         address: "string",
-    //         capacity: 4,
-    //         price: 0,
-    //         minimum_age: 0,
-    //         maximum_age: 150,
-    //         only_for_itmo_students: false,
-    //         only_for_russians: false,
-    //         id: 0,
-    //         channel_id: 0,
-    //         rating: 0
-    //     }]);
     const [layout, setLayout] = useState('grid');
 
     const navigate = useNavigate();
@@ -115,7 +98,6 @@ export default function EventsContainer({events}) {
                     </div>
                     <div className="flex align-items-center justify-content-between">
                         <Button label="Подробнее" icon="pi pi-arrow-right" text size="small" iconPos="right" onClick={(e) => {
-                            console.log(event.id)
                             navigate(`/catalog/${event.id}`)
                         }}/>
                         {/*<span className="text-2xl font-semibold">${event.price}</span>*/}

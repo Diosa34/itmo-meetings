@@ -14,7 +14,7 @@ function Container() {
         <>
             <Header />
             <Routes>
-                <Route path="/catalog" element={<MainPage />} />
+                <Route index path="/catalog" element={<MainPage />} />
                     <Route path="/catalog/:id" element={<Event />} />
                 <Route path="/rating" element={<FeedbackForm />} />
                 <Route path="/profile" element={<Profile />} />

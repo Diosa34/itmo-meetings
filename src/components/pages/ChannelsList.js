@@ -10,18 +10,20 @@ import CreateChannelForm from "../forms/CreateChannelForm";
 
 
 function Channels() {
-    const [allChannels, setAllChannels] = useState([
-      {
-        "name": "My super channel name",
-        "description": "Here plain text",
-        "is_public": false,
-        "id": 0,
-        "members_cnt": 0,
-        "rating": 0,
-        "is_personal": false,
-        "is_active": true
-      }
-    ]);
+    const [allChannels, setAllChannels] = useState([{}]
+    //     [
+    //   {
+    //     "name": "My super channel name",
+    //     "description": "Here plain text",
+    //     "is_public": false,
+    //     "id": 0,
+    //     "members_cnt": 0,
+    //     "rating": 0,
+    //     "is_personal": false,
+    //     "is_active": true
+    //   }
+    // ]
+    );
     const [myChannels, setMyChannels] = useState([
           {
             "notify_about_meeting": false,

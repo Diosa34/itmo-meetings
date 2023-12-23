@@ -4,7 +4,7 @@ import {Rating} from "primereact/rating";
 import {Dialog} from "primereact/dialog";
 import showToast from "../toast";
 import {Toast} from "primereact/toast";
-import somePost from "../somePost";
+import somePost from "../getFetcher";
 
 function FeedbackForm({setModalActive, isModalActive, isRatingExists, actualRating=0, meeting_id}) {
     const [rating, setRating] = useState(actualRating);

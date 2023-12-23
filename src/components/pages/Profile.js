@@ -10,15 +10,15 @@ import showToast from "../toast";
 import {Button} from "primereact/button";
 
 function Profile() {
-    const [username, setUserame] = useState("Elison");
-    const [name, setName] = useState("Elison");
-    const [surname, setSurname] = useState("Argent");
-    const [patronymic, setPatronymic] = useState(null);
-    const [telephone, setTelephone] = useState("+79001234567");
-    const [email, setEmail] = useState("elison@example.com");
-    const [gender, setGender] = useState("male");
-    const [date_of_birth, setDate_of_birth] = useState("2000-01-01");
-    const [user_id, setUser_id] = useState("");
+    const [username, setUserame] = useState();
+    const [name, setName] = useState();
+    const [surname, setSurname] = useState();
+    const [patronymic, setPatronymic] = useState();
+    const [telephone, setTelephone] = useState();
+    const [email, setEmail] = useState();
+    const [gender, setGender] = useState();
+    const [date_of_birth, setDate_of_birth] = useState();
+    const [user_id, setUser_id] = useState();
     const token = 'Bearer ' + localStorage.getItem('token')
     const navigate = useNavigate();
 
@@ -59,7 +59,7 @@ function Profile() {
                     }
                 }
             )
-    }, [navigate, profileToast]);
+    }, [navigate, profileToast, token]);
 
     const editProfile = () => {
         fetch(`http://localhost:8000/user/${user_id}/`,
@@ -207,7 +207,7 @@ function Profile() {
                                 }} autoFocus />
                             </InplaceContent>
                     </Inplace>
-                    <Button label="Выйти" severity="warning" outlined onClick={navigate('/login')}/>
+                    <Button label="Выйти" severity="warning" outlined onClick={(event) => navigate('/login')}/>
                     <Button label="Удалить профиль" severity="danger" outlined onClick={deleteAccount}/>
                 </div>
                 <div className="middle">
