@@ -1,5 +1,5 @@
-export const getFetcher = async (url, token) => {
-    await fetch(url,
+export const getFetcher = (url, token) => {
+    fetch(url,
         {
             method: 'GET',
             headers: {
