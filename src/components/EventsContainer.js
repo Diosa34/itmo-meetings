@@ -11,7 +11,6 @@ export default function EventsContainer({events}) {
     const [layout, setLayout] = useState('grid');
 
     const navigate = useNavigate();
-    const cardToast = useRef(null);
 
     const getSeverity = (event) => {
         switch (event.inventoryStatus) {

@@ -141,7 +141,7 @@ function Profile() {
                 <div className="left">
                     <Avatar className={'avatar'} icon="pi pi-user" size="xlarge" shape="circle" />
                     <Inplace closable className="child"  onClose={editProfile}>
-                        <InplaceDisplay>{surname || 'Введите значение'}</InplaceDisplay>
+                        <InplaceDisplay>{surname}</InplaceDisplay>
                         <InplaceContent>
                             <InputText
                                 value={surname}
@@ -154,7 +154,7 @@ function Profile() {
                         </InplaceContent>
                     </Inplace>
                     <Inplace closable onClose={editProfile}>
-                        <InplaceDisplay>{name || 'Введите значение'}</InplaceDisplay>
+                        <InplaceDisplay>{name}</InplaceDisplay>
                         <InplaceContent>
                             <InputText value={name} onChange={(e) => {
                                 setName(e.target.value)
@@ -163,7 +163,7 @@ function Profile() {
                         </InplaceContent>
                     </Inplace>
                     <Inplace closable onClose={editProfile}>
-                        <InplaceDisplay>{patronymic || 'Введите значение'}</InplaceDisplay>
+                        <InplaceDisplay>{patronymic}</InplaceDisplay>
                         <InplaceContent>
                             <InputText value={patronymic} onChange={(e) => {
                                 setPatronymic(e.target.value)
@@ -173,7 +173,7 @@ function Profile() {
                         </InplaceContent>
                     </Inplace>
                     <Inplace closable onClose={editProfile}>
-                        <InplaceDisplay>{gender || 'Введите значение'}</InplaceDisplay>
+                        <InplaceDisplay>{gender}</InplaceDisplay>
                         <InplaceContent>
                             <InputText value={gender} onChange={(e) => {
                                 setGender(e.target.value)
@@ -181,7 +181,7 @@ function Profile() {
                         </InplaceContent>
                     </Inplace>
                     <Inplace closable onClose={editProfile}>
-                        <InplaceDisplay>{telephone || 'Введите значение'}</InplaceDisplay>
+                        <InplaceDisplay>{telephone}</InplaceDisplay>
                             <InplaceContent>
                                 <InputText value={telephone} onChange={(e) => {
                                     setTelephone(e.target.value)
@@ -190,7 +190,7 @@ function Profile() {
                             </InplaceContent>
                     </Inplace>
                     <Inplace closable onClose={editProfile}>
-                        <InplaceDisplay>{email || 'Введите значение'}</InplaceDisplay>
+                        <InplaceDisplay>{email}</InplaceDisplay>
                             <InplaceContent>
                                 <InputText value={email} onChange={(e) => {
                                     setEmail(e.target.value)
@@ -199,7 +199,7 @@ function Profile() {
                             </InplaceContent>
                     </Inplace>
                     <Inplace closable onClose={editProfile}>
-                        <InplaceDisplay>{date_of_birth || 'Введите значение'}</InplaceDisplay>
+                        <InplaceDisplay>{date_of_birth}</InplaceDisplay>
                             <InplaceContent>
                                 <InputText value={date_of_birth} onChange={(e) => {
                                     setDate_of_birth(e.target.value)

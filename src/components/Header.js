@@ -8,10 +8,9 @@ function Header() {
     const [activeIndex, setActiveIndex] = useState(0);
     const items = [
         {label: 'Главная', icon: 'pi pi-fw pi-home', link: "/catalog"},
-        {label: 'Мои каналы', icon: 'pi pi-fw pi-sitemap', link: '/channels'},
+        {label: 'Каналы', icon: 'pi pi-fw pi-sitemap', link: '/channels'},
         {icon: 'pi pi-fw pi-user', link: '/profile'}
     ];
-    // const [sidebarVisible, setSidebarVisible] = useState(false);
 
     const navigate = useNavigate();
 

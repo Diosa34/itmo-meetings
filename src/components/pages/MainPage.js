@@ -29,15 +29,11 @@ function MainPage() {
                     const data = response.json();
                     data.then(value => {
                         setEvents(value)
-                        console.log(value)
                     });
                 } else if (response.status === 401) {
                     navigate('/login')
-                    // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
                 } else if (response.status === 422) {
-                    // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
                 } else if (response.status === 500) {
-                    // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
                 }
             }
         )

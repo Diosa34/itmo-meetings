@@ -10,40 +10,8 @@ import CreateChannelForm from "../forms/CreateChannelForm";
 
 
 function Channels() {
-    const [allChannels, setAllChannels] = useState([{}]
-    //     [
-    //   {
-    //     "name": "My super channel name",
-    //     "description": "Here plain text",
-    //     "is_public": false,
-    //     "id": 0,
-    //     "members_cnt": 0,
-    //     "rating": 0,
-    //     "is_personal": false,
-    //     "is_active": true
-    //   }
-    // ]
-    );
-    const [myChannels, setMyChannels] = useState([
-          {
-            "notify_about_meeting": false,
-            "user_id": 0,
-            "channel_id": 0,
-            "permissions": 0,
-            "is_owner": true,
-            "date_of_join": "2023-12-20T15:27:53.446Z",
-            "channel": {
-              "name": "My super channel name",
-              "description": "Here plain text",
-              "is_public": false,
-              "id": 0,
-              "members_cnt": 0,
-              "rating": 0,
-              "is_personal": false,
-              "is_active": true
-            }
-          }
-        ]);
+    const [allChannels, setAllChannels] = useState();
+    const [myChannels, setMyChannels] = useState();
 
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -66,15 +34,10 @@ function Channels() {
                 const data = response.json();
                 data.then(value => {
                     setMyChannels(value)
-                    console.log(value)
                 });
             } else if (response.status === 401) {
                 navigate('/login')
-                // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
-            } else if (response.status === 422) {
-                // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
             } else if (response.status === 500) {
-                // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
             }
         })
     }, [navigate])
@@ -101,11 +64,7 @@ function Channels() {
                     });
                 } else if (response.status === 401) {
                     navigate('/login')
-                    // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
-                } else if (response.status === 422) {
-                    // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
                 } else if (response.status === 500) {
-                    // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
                 }
             }
         )
@@ -156,23 +115,26 @@ function Channels() {
             <div className="container">
                 <div className="box-1">
                     <h1>Каналы</h1>
+                    <p>
+                        Каналы нужны, чтобы люди могли объединяться и создавать мероприятия от имени сообщества.
+                    </p>
                 </div>
                 <div className="box-2">
                     <CreateChannelForm />
                 </div>
             </div>
-
-            <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
-                <TabPanel header="Мои каналы">
-                    <DataView value={myChannels.map((elem) => elem.channel).filter((elem) => !elem.is_personal)} itemTemplate={itemTemplate} />
-                </TabPanel>
-                <TabPanel header="Все каналы">
-                    <DataView value={allChannels.filter((elem) => !elem.is_personal)} itemTemplate={itemTemplate} />
-                </TabPanel>
-            </TabView>
+            {!(typeof myChannels === "undefined") && !(typeof allChannels === "undefined") ?
+                <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
+                    <TabPanel header="Мои каналы">
+                        <DataView value={myChannels.map((elem) => elem.channel).filter((elem) => !elem.is_personal)} itemTemplate={itemTemplate} />
+                    </TabPanel>
+                    <TabPanel header="Все каналы">
+                        <DataView value={allChannels.filter((elem) => !elem.is_personal)} itemTemplate={itemTemplate} />
+                    </TabPanel>
+                </TabView>
+            : null}
         </div>
     )
-
 }
 
 export default Channels;
