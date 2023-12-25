@@ -8,6 +8,7 @@ import AddEvent from "../forms/AddEvent";
 import {Button} from "primereact/button";
 import {Sidebar} from "primereact/sidebar";
 import WaitModal from "../forms/waitModal";
+import CreateChannelForm from "../forms/CreateChannelForm";
 
 export default function Channel() {
     const params = useParams();
@@ -28,18 +29,7 @@ export default function Channel() {
         "confidentiality": 76,
         "is_staff": false
     })
-    const [channel, setChannel] = useState(
-        // {
-        //     name: "My super channel name",
-        //     description: "Here plain text",
-        //     is_public: false,
-        //     id: 0,
-        //     members_cnt: 0,
-        //     rating: 0,
-        //     is_personal: false,
-        //     is_active: true
-        // }
-    )
+    const [channel, setChannel] = useState();
     const [events, setEvents] = useState();
     const [requestError, setRequestError] = useState()
     const [visibleRight, setVisibleRight] = useState(false);
@@ -290,24 +280,24 @@ export default function Channel() {
 
     if (requestError) {
         return (
-            <ErrorPage code={requestError.code} title={requestError.title} message={requestError.message}/>
+            <ErrorPage title={requestError.title} message={requestError.message}/>
         )
     } else {
         return (
+
             <div className="channelContainer">
                 {!(typeof channel === "undefined") && !(typeof events === "undefined") ?
+                    <>
                     <div className="left-area gap-5 p-5">
                         <div className="container">
                             <div className="box-1">
                                 <h1>{channel.name}</h1>
                             </div>
-                            <div className="box-2">
-                            </div>
                         </div>
                         <p className="text-xl">{channel.description}</p>
                         <EventsContainer events={events}/>
                     </div>
-                : null }
+
                 <div className="p-5 right-area">
                     <div className="flex gap-2 justify-content-center">
                         <Button icon="pi pi-arrow-left" onClick={() => setVisibleRight(true)} />
@@ -338,6 +328,8 @@ export default function Channel() {
                             </p>
                             <Button label="Удалить канал"  icon="pi pi-times" iconPos="right" outlined onClick={deleteChannel}/>
                             <p></p>
+                            <CreateChannelForm defaultName={channel.name} defaultDescription={channel.description} defaultIsPublic={channel.is_public} path={`http://localhost:8000/channel/${channel.id}/`} method='PUT' buttonTitle='Редактировать канал' />
+                            <p></p>
                             <Button label="Заявки на вступление"  icon="pi pi-user" iconPos="right" outlined onClick={setWaitModal}/>
                             <WaitModal isModalActive={waitModal} setModalActive={setWaitModal} channel_id={params.id} users={members}/>
                         </div>
@@ -352,6 +344,8 @@ export default function Channel() {
                         </div>
                     </Sidebar>
                 </div>
+                    </>
+                : null }
                 <Toast ref={failToast} />
             </div>
         )

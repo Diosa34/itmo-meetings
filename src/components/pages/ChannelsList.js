@@ -76,13 +76,18 @@ function Channels() {
             return
         }
 
-        const member = myChannels.filter((elem) => elem.channel.id === id)[0]
-        if (member.is_owner) {
-            return "Владелец"
-        } else if (member.permissions === 0) {
-            return "В ожидании"
-        } else if (member.permissions !== 0 && !member.is_owner) {
-            return "Участник"
+        const channels = myChannels.filter((elem) => elem.channel.id === id)
+        if (channels.length !== 0) {
+            const member = channels[0]
+            if (member.is_owner) {
+                return "Владелец"
+            } else if (member.permissions === 0) {
+                return "В ожидании"
+            } else if (member.permissions !== 0 && !member.is_owner) {
+                return "Участник"
+            }
+        } else {
+            return
         }
     }
 

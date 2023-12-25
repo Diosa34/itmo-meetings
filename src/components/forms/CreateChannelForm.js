@@ -10,10 +10,11 @@ import {Dialog} from "primereact/dialog";
 import {Checkbox} from "primereact/checkbox";
 import {useNavigate} from "react-router-dom";
 
-export default function CreateChannelForm() {
+export default function CreateChannelForm({defaultName='', defaultDescription='', defaultIsPublic=true, path=`http://localhost:8000/channel/`, method='POST', buttonTitle='Создать канал'}) {
     const [isModalActive, setModalActive] = useState(false);
     const toast = useRef(null);
     const navigate = useNavigate()
+    const token = 'Bearer ' + localStorage.getItem('token')
 
     const show = (severity, summary, detail) => {
         toast.current.show({ severity: severity, summary: summary, detail: detail});
@@ -21,9 +22,9 @@ export default function CreateChannelForm() {
 
     const formik = useFormik({
         initialValues: {
-            name: '',
-            description: '',
-            is_public: true
+            name: defaultName,
+            description: defaultDescription,
+            is_public: defaultIsPublic
         },
         validate: (data) => {
             let errors = {};
@@ -35,10 +36,9 @@ export default function CreateChannelForm() {
             return errors;
         },
         onSubmit: (data) => {
-            const token = 'Bearer ' + localStorage.getItem('token')
-            fetch(`http://localhost:8000/channel/`,
+            fetch(path,
                 {
-                    method: 'POST',
+                    method: method,
                     headers: {
                         'Accept': 'application/json',
                         'Content-type': 'application/json',
@@ -120,10 +120,10 @@ export default function CreateChannelForm() {
                         <label htmlFor="is_public" className="ml-2">Публичный канал (для вступления не требуется подтверждение администратора)</label>
                     </span>
                 {getFormErrorMessage('is_public')}
-                <Button className={'footer'} label="Создать канал" type="submit" icon="pi pi-check" />
+                <Button className={'footer'} label={buttonTitle} type="submit" icon="pi pi-check" />
             </form>
         </Dialog>
-        <Button label="Создать канал" onClick={() => setModalActive(true)} icon="pi pi-plus" iconPos="right" text raised />
+        <Button label={buttonTitle} onClick={() => setModalActive(true)} icon="pi pi-plus" iconPos="right"  outlined  />
         <Toast ref={toast} />
         </div>
     )

@@ -9,24 +9,7 @@ import showToast from "./toast";
 
 export default function EventsContainer({events}) {
     const [layout, setLayout] = useState('grid');
-
     const navigate = useNavigate();
-
-    const getSeverity = (event) => {
-        switch (event.inventoryStatus) {
-            case 'INSTOCK':
-                return 'success';
-
-            case 'LOWSTOCK':
-                return 'warning';
-
-            case 'OUTOFSTOCK':
-                return 'danger';
-
-            default:
-                return null;
-        }
-    };
 
     const listItem = (event) => {
         return (
@@ -99,7 +82,6 @@ export default function EventsContainer({events}) {
                         <Button label="Подробнее" icon="pi pi-arrow-right" text size="small" iconPos="right" onClick={(e) => {
                             navigate(`/catalog/${event.id}`)
                         }}/>
-                        {/*<span className="text-2xl font-semibold">${event.price}</span>*/}
                     </div>
                 </div>
             </div>
