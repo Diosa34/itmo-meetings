@@ -214,7 +214,7 @@ function Event() {
                 <div className="container">
                     <div className="box-1 gap-2">
                         <h1>{event.title}</h1>
-                        <label className="first-col">Время: {event.start_datetime}</label>
+                        <label className="first-col">Начало: {event.start_datetime.slice(8,10)}.{event.start_datetime.slice(5,7)}.{event.start_datetime.slice(0,4)} {event.start_datetime.slice(11,16)}</label>
                         <label className="first-col">Место: {event.address}</label>
                         <label className="first-col">Длительность: {event.duration_in_minutes} мин.</label>
                         <label className="first-col">Цена: {event.price} руб.</label>
@@ -227,12 +227,10 @@ function Event() {
                         }}/>
                     </div>
                     <div className="box-2">
-                        {event.start_datetime > new Date() ?
                         <div>
                             <Button visible={!isMember} label="Отправить заявку"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToMeeting}/>
                             <Button visible={isMember} label="Покинуть мероприятие" icon="pi pi-times" iconPos="right" severity="danger" outlined onClick={leftMeeting}/>
                         </div>
-                        : <p>Запись на данное мероприятие больше недоступна.</p>}
                     </div>
                     <FeedbackForm setModalActive={setModalActive} isModalActive={isModalActive} meeting_id={event.id} actualRating={feedback} isRatingExists={!feedback===undefined}/>
                     <Button visible={Date.parse(event.start_datetime) < new Date().getTime() && !feedback} label="Оставить отзыв" onClick={() => setModalActive(true)} icon="pi pi-check" iconPos="right" text raised />
