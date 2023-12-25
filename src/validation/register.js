@@ -1,10 +1,8 @@
 export default function validate(data, birthDay)  {
         let errors = {};
 
-        if (!data.isu) {
-            errors.isu = 'Введите ису';
-        } else if (String(data.isu).length !== 6) {
-            errors.isu = 'Ису должно быть шестизначным';
+        if (!data.username) {
+            errors.username = 'Выберите псевдоним';
         }
 
         if (!data.surname) {

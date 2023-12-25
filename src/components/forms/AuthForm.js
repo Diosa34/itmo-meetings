@@ -80,7 +80,7 @@ function AuthForm() {
                         const token = await response.json()
                         localStorage.setItem('token', token.access_token)
                         console.log(localStorage.getItem('token'))
-                        navigate('/main')
+                        navigate('/catalog')
                         showToast(successToast, 'success', 'Пользователь успешно авторизован');
                     } else if (response.status === 422) {
                         showToast(failToast, 'error', 'Пользователь не авторизован', 'Некорректный запрос');
@@ -112,21 +112,24 @@ function AuthForm() {
                 }
             />
             <form onSubmit={formik.handleSubmit} className="auth gap-4">
-                <span className="p-float-label">
-                    <InputText
-                        inputid="login"
-                        value={formik.values.login}
-                        className={classNames({ 'p-invalid': isFormFieldInvalid('login') }, 'widthInput')}
-                        onChange={(e) => {
-                            formik.setFieldValue('login', e.target.value);
-                            setLogin(e.target.value)
+                <div>
+                    <span className="p-float-label">
+                        <InputText
+                            inputid="login"
+                            value={formik.values.login}
+                            className={classNames({ 'p-invalid': isFormFieldInvalid('login') }, 'widthInput')}
+                            onChange={(e) => {
+                                formik.setFieldValue('login', e.target.value);
+                                setLogin(e.target.value)
                             }
-                        }
-                    />
-                    <label htmlFor="login">Логин</label>
-                </span>
-                {getFormErrorMessage('login')}
-                <span className="p-float-label">
+                            }
+                        />
+                        <label htmlFor="login">Логин</label>
+                    </span>
+                        {getFormErrorMessage('login')}
+                </div>
+                <div>
+                    <span className="p-float-label">
                     <Password
                         inputid="password"
                         value={formik.values.password}
@@ -140,7 +143,9 @@ function AuthForm() {
                     />
                     <label htmlFor="password">Пароль</label>
                 </span>
-                {getFormErrorMessage('password')}
+                    {getFormErrorMessage('password')}
+                </div>
+
                 <Button type='submit'>Войти</Button>
             </form>
             <Toast ref={successToast} />

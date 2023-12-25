@@ -28,7 +28,7 @@ function MainPage() {
                 if (response.ok) {
                     const data = response.json();
                     data.then(value => {
-                        setEvents(value)
+                        setEvents(value.sort((elem1, elem2) => elem1.start_datetime > elem2.start_datetime ? 1 : -1))
                     });
                 } else if (response.status === 401) {
                     navigate('/login')

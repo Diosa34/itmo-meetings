@@ -80,17 +80,19 @@ export default function CreateChannelForm({defaultName='', defaultDescription=''
     return (
         <div>
         <Dialog header="Новый канал" className="card flex justify-content-center shadow-2 border-round" visible={isModalActive} onHide={() => setModalActive(false)} style={{ width: '40%' }}>
-            <form onSubmit={formik.handleSubmit} className="flex flex-column gap-2">
-                <span className="p-float-label">
+            <form onSubmit={formik.handleSubmit} className="auth flex flex-column gap-4">
+                <div>
+                    <span className="p-float-label">
                     <InputText id="name"
                                value={formik.values.name}
                                onChange={(e) =>
                                    formik.setFieldValue('name', e.target.value)}/>
                     <label htmlFor="name">Название канала</label>
                 </span>
-                {getFormErrorMessage('name')}
-                <span className="p-float-label">
-                    <Toast ref={toast} />
+                    {getFormErrorMessage('name')}
+                </div>
+                <div>
+                    <span className="p-float-label">
                     <InputTextarea
                         id="description"
                         inputid="description"
@@ -105,8 +107,10 @@ export default function CreateChannelForm({defaultName='', defaultDescription=''
                     />
                     <label htmlFor="description">Описание канала</label>
                 </span>
-                {getFormErrorMessage('description')}
-                <span className="flex align-items-center">
+                    {getFormErrorMessage('description')}
+                </div>
+                <div>
+                   <span className="flex align-items-center">
                         <Checkbox
                             inputId="is_public"
                             name="is_public"
@@ -119,7 +123,8 @@ export default function CreateChannelForm({defaultName='', defaultDescription=''
                         />
                         <label htmlFor="is_public" className="ml-2">Публичный канал (для вступления не требуется подтверждение администратора)</label>
                     </span>
-                {getFormErrorMessage('is_public')}
+                    {getFormErrorMessage('is_public')}
+                </div>
                 <Button className={'footer'} label={buttonTitle} type="submit" icon="pi pi-check" />
             </form>
         </Dialog>

@@ -9,26 +9,14 @@ import {Button} from "primereact/button";
 import {Sidebar} from "primereact/sidebar";
 import WaitModal from "../forms/waitModal";
 import CreateChannelForm from "../forms/CreateChannelForm";
+import MemberRoleForm from "../forms/MemberRoleForm";
 
 export default function Channel() {
     const params = useParams();
     const navigate = useNavigate();
-    const [members: [], setMembers] = useState();
-    const [me, setMe] = useState({
-        "username": "elison98",
-        "telephone": "+79001234567",
-        "email": "elison@example.com",
-        "firstname": "Elison",
-        "patronymic": null,
-        "surname": "Argent",
-        "other_names": null,
-        "gender": "male",
-        "date_of_birth": "2000-01-01",
-        "id": 0,
-        "referrer_id": 0,
-        "confidentiality": 76,
-        "is_staff": false
-    })
+    const [members, setMembers] = useState();
+    const [users, setUsers] = useState([]);
+    const [me, setMe] = useState()
     const [channel, setChannel] = useState();
     const [events, setEvents] = useState();
     const [requestError, setRequestError] = useState()
@@ -76,6 +64,34 @@ export default function Channel() {
         )
     }, [navigate, params.id, token]);
 
+    function getUser(id) {
+        fetch(`http://localhost:8000/user/${id}/`,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                }
+            }
+        ).then(response => {
+                if (response.ok) {
+                    const data = response.json();
+                    data.then(value => {
+                            const newUser = [value]
+                            if (!users.includes(value)) {
+                                setUsers([...users, ...newUser])
+                            }
+                        }
+                    );
+                } else if (response.status === 401) {
+                    navigate('/login')
+                }
+            }
+        )
+    }
+
     useEffect(() => {
         fetch('http://localhost:8000/meeting/list/',
             {
@@ -91,7 +107,9 @@ export default function Channel() {
                 if (response.ok) {
                     const data = response.json();
                     data.then(value => {
-                        setEvents(value.filter((elem) => elem.channel_id == params.id))
+                        const filteredEvents = value.filter((elem) => elem.channel_id == params.id)
+                        const sortedEvents = filteredEvents.sort((elem1, elem2) => elem1.start_datetime > elem2.start_datetime ? 1 : -1);
+                        setEvents(sortedEvents)
                     });
                 } else if (response.status === 401) {
                     navigate('/login')
@@ -125,6 +143,7 @@ export default function Channel() {
                     const data = response.json();
                     data.then(value => {
                         setMembers(value)
+                        value.forEach((elem) => getUser(elem.user_id))
                     });
                 } else if (response.status === 401) {
                     navigate('/login')
@@ -297,10 +316,10 @@ export default function Channel() {
                         <p className="text-xl">{channel.description}</p>
                         <EventsContainer events={events}/>
                     </div>
-
+                    {!(typeof members === "undefined") ?
                 <div className="p-5 right-area">
                     <div className="flex gap-2 justify-content-center">
-                        <Button icon="pi pi-arrow-left" onClick={() => setVisibleRight(true)} />
+                        <Button icon="pi pi-cog" onClick={() => setVisibleRight(true)} />
                     </div>
                     <Sidebar visible={visibleRight && (members.filter((elem) => {
                         return elem.user_id === me.id}).length === 0)} position="right" onHide={() => setVisibleRight(false)}>
@@ -332,6 +351,8 @@ export default function Channel() {
                             <p></p>
                             <Button label="Заявки на вступление"  icon="pi pi-user" iconPos="right" outlined onClick={setWaitModal}/>
                             <WaitModal isModalActive={waitModal} setModalActive={setWaitModal} channel_id={params.id} users={members}/>
+                            <p></p>
+                            <MemberRoleForm channel_id={channel.id} my_id={me.id} members={members} users={users.filter((elem) => elem.id !== me.id)}/>
                         </div>
                     </Sidebar>
                     <Sidebar visible={visibleRight && (members.filter((elem) => {return elem.user_id === me.id && elem.permissions !== 0 && !elem.is_owner}).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
@@ -344,6 +365,7 @@ export default function Channel() {
                         </div>
                     </Sidebar>
                 </div>
+                : null }
                     </>
                 : null }
                 <Toast ref={failToast} />

@@ -10,7 +10,7 @@ import showToast from "../toast";
 import {Button} from "primereact/button";
 
 function Profile() {
-    const [username, setUserame] = useState();
+    const [username, setUsername] = useState();
     const [name, setName] = useState();
     const [surname, setSurname] = useState();
     const [patronymic, setPatronymic] = useState();
@@ -39,7 +39,7 @@ function Profile() {
                     if (response.ok) {
                         response.json().then(data => {
                             setName(data.firstname);
-                            setUserame(data.username);
+                            setUsername(data.username);
                             setSurname(data.surname);
                             setPatronymic(data.patronymic);
                             setTelephone(data.telephone);
@@ -88,13 +88,14 @@ function Profile() {
         ).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                            setName(data.firstname);
-                            setSurname(data.surname);
-                            setPatronymic(data.patronymic);
-                            setTelephone(data.telephone);
-                            setEmail(data.email);
-                            setGender(data.gender);
-                            setDate_of_birth(data.date_of_birth);
+                        setName(data.firstname);
+                        setUsername(data.username);
+                        setSurname(data.surname);
+                        setPatronymic(data.patronymic);
+                        setTelephone(data.telephone);
+                        setEmail(data.email);
+                        setGender(data.gender);
+                        setDate_of_birth(data.date_of_birth);
                         }
                     );
                 } else if (response.status === 401) {
@@ -140,6 +141,15 @@ function Profile() {
                 <h1 className="title">Мой профиль</h1>
                 <div className="left">
                     <Avatar className={'avatar'} icon="pi pi-user" size="xlarge" shape="circle" />
+                    <Inplace closable onClose={editProfile}>
+                        <InplaceDisplay>{username}</InplaceDisplay>
+                        <InplaceContent>
+                            <InputText value={username} onChange={(e) => {
+                                setUsername(e.target.value)
+                                editProfile()
+                            }} autoFocus />
+                        </InplaceContent>
+                    </Inplace>
                     <Inplace closable className="child"  onClose={editProfile}>
                         <InplaceDisplay>{surname}</InplaceDisplay>
                         <InplaceContent>

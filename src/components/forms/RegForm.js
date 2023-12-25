@@ -75,7 +75,7 @@ function RegForm() {
 
     const formik = useFormik({
         initialValues: {
-            isu: '',
+            username: '',
             surname: '',
             name: '',
             patronymic: null,
@@ -94,7 +94,7 @@ function RegForm() {
                 'POST',
                 'application/json',
                 {
-                    username: formik.values.login,
+                    username: formik.values.username,
                     telephone: formik.values.telephone,
                     email: formik.values.email,
                     firstname: formik.values.name,
@@ -139,20 +139,23 @@ function RegForm() {
                 }
             />
             <form className="auth gap-4" onSubmit={formik.handleSubmit}>
-                <span className="p-float-label">
+                <div>
+                    <span className="p-float-label">
                     <InputText
-                        inputid="isu"
-                        value={formik.values.isu}
-                        className={classNames({ 'p-invalid': isFormFieldInvalid('isu') })}
+                        inputid="username"
+                        value={formik.values.username}
+                        className={classNames({ 'p-invalid': isFormFieldInvalid('username') })}
                         onChange={(e) => {
-                            formik.setFieldValue('isu', e.target.value);
+                            formik.setFieldValue('username', e.target.value);
                             setIsu(e.target.value)
                         }}
                     />
-                    <label htmlFor="isu">Ису</label>
-                </span>
-                {getFormErrorMessage('isu')}
-                <span className="p-float-label">
+                    <label htmlFor="username">Ник</label>
+                    </span>
+                        {getFormErrorMessage('username')}
+                </div>
+                <div>
+                    <span className="p-float-label">
                     <InputText
                         inputid="surname"
                         value={formik.values.surname}
@@ -163,9 +166,11 @@ function RegForm() {
                         }}
                     />
                     <label htmlFor="surname">Фамилия</label>
-                </span>
-                {getFormErrorMessage('surname')}
-                <span className="p-float-label">
+                    </span>
+                        {getFormErrorMessage('surname')}
+                </div>
+                <div>
+                    <span className="p-float-label">
                     <InputText
                         inputid="name"
                         value={formik.values.name}
@@ -176,9 +181,11 @@ function RegForm() {
                         }}
                     />
                     <label htmlFor="name">Имя</label>
-                </span>
-                {getFormErrorMessage('name')}
-                <span className="p-float-label">
+                    </span>
+                        {getFormErrorMessage('name')}
+                </div>
+                <div>
+                    <span className="p-float-label">
                     <InputText
                         inputid="patronymic"
                         value={formik.values.patronymic}
@@ -190,8 +197,10 @@ function RegForm() {
                     />
                     <label htmlFor="patronymic">Отчество (при наличии)</label>
                 </span>
-                {getFormErrorMessage('patronymic')}
-                <span className="flex">
+                    {getFormErrorMessage('patronymic')}
+                </div>
+                <div>
+                    <span className="flex">
 
                     {radioBtns.map((btn, i) => {
                         return (
@@ -211,7 +220,9 @@ function RegForm() {
                         );
                     })}
                 </span>
-                {getFormErrorMessage('gender')}
+                    {getFormErrorMessage('gender')}
+                </div>
+                <div>
                     <Calendar
                         yearRange="1900:2007"
                         inputid="birth_date"
@@ -225,8 +236,10 @@ function RegForm() {
                         dateFormat="yy.mm.dd"
                         placeholder={"Дата рождения"}
                     />
-                {getFormErrorMessage('birthDay')}
-                <span className="p-float-label">
+                    {getFormErrorMessage('birthDay')}
+                </div>
+                <div>
+                    <span className="p-float-label">
                     <InputText
                         inputid="telephone"
                         value={formik.values.telephone}
@@ -240,8 +253,10 @@ function RegForm() {
                     />
                     <label htmlFor="telephone">Телефон</label>
                 </span>
-                {getFormErrorMessage('telephone')}
-                <span className="p-float-label">
+                    {getFormErrorMessage('telephone')}
+                </div>
+                <div>
+                    <span className="p-float-label">
                     <InputText
                         inputid="email"
                         value={formik.values.email}
@@ -254,8 +269,10 @@ function RegForm() {
                     />
                     <label htmlFor="email">Электронная почта</label>
                 </span>
-                {getFormErrorMessage('email')}
-                <span className="p-float-label">
+                    {getFormErrorMessage('email')}
+                </div>
+                <div>
+                    <span className="p-float-label">
                     <InputText
                         inputid="login"
                         value={formik.values.login}
@@ -267,8 +284,10 @@ function RegForm() {
                     />
                     <label htmlFor="login">Логин</label>
                 </span>
-                {getFormErrorMessage('login')}
-                <span className="p-float-label">
+                    {getFormErrorMessage('login')}
+                </div>
+                <div>
+                    <span className="p-float-label">
                     <Password
                         inputid="password"
                         value={formik.values.password}
@@ -284,8 +303,10 @@ function RegForm() {
                     />
                     <label htmlFor="password">Пароль</label>
                 </span>
-                {getFormErrorMessage('password')}
-                <span className="p-float-label">
+                    {getFormErrorMessage('password')}
+                </div>
+                <div>
+                    <span className="p-float-label">
                     <Password
                         inputid="password2"
                         value={formik.values.password2}
@@ -298,7 +319,8 @@ function RegForm() {
                         toggleMask/>
                     <label htmlFor="password2">Пароль ещё раз</label>
                 </span>
-                {getFormErrorMessage('password2')}
+                    {getFormErrorMessage('password2')}
+                </div>
                 <Button type='submit'>Зарегистрироваться</Button>
             </form>
             <Toast ref={successToast} />

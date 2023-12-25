@@ -227,8 +227,12 @@ function Event() {
                         }}/>
                     </div>
                     <div className="box-2">
-                        <Button visible={!isMember} label="Отправить заявку"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToMeeting}/>
-                        <Button visible={isMember} label="Покинуть мероприятие" icon="pi pi-times" iconPos="right" severity="danger" outlined onClick={leftMeeting}/>
+                        {event.start_datetime > new Date() ?
+                        <div>
+                            <Button visible={!isMember} label="Отправить заявку"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToMeeting}/>
+                            <Button visible={isMember} label="Покинуть мероприятие" icon="pi pi-times" iconPos="right" severity="danger" outlined onClick={leftMeeting}/>
+                        </div>
+                        : <p>Запись на данное мероприятие больше недоступна.</p>}
                     </div>
                     <FeedbackForm setModalActive={setModalActive} isModalActive={isModalActive} meeting_id={event.id} actualRating={feedback} isRatingExists={!feedback===undefined}/>
                     <Button visible={Date.parse(event.start_datetime) < new Date().getTime() && !feedback} label="Оставить отзыв" onClick={() => setModalActive(true)} icon="pi pi-check" iconPos="right" text raised />

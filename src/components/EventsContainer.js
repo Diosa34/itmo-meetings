@@ -22,7 +22,7 @@ export default function EventsContainer({events}) {
 
                             <div className="flex gap-2 text-l font-light" >
                                 <i className="pi pi-clock"></i>
-                                {'Когда: ' + event.start_datetime}
+                                {'Когда: ' + event.start_datetime.toString()}
                             </div>
                             <div className="flex gap-2 text-l font-light">
                                 <i className="pi pi-map-marker"></i>
@@ -70,7 +70,7 @@ export default function EventsContainer({events}) {
                         <div className="text-l font-light">{event.description.split('.')[0] + '.'}</div>
                         <div className="flex gap-2 text-l font-light" >
                             <i className="pi pi-clock"></i>
-                            {'Когда: ' + event.start_datetime}
+                            {'Когда: ' + event.start_datetime.toString()}
                         </div>
                         <div className="flex gap-2 text-l font-light">
                             <i className="pi pi-map-marker"></i>
