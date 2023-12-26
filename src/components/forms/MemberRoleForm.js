@@ -12,7 +12,12 @@ export default function MemberRoleForm({channel_id, my_id, members, users}) {
     // const [members, setMembers] = useState();
     // const [users, setUsers] = useState();
     const [selectedUser, setSelectedUser] = useState();
-    const [roles, setRoles] = useState([{role: 'OWNER'}, {role: 'ADMIN'}, {role: 'EDITOR'}, {role: 'MEMBER'}, {role: 'BLOCKED'}])
+    const [roles, setRoles] = useState([
+        {role: 'OWNER', translation: 'Владелец'},
+        {role: 'ADMIN', translation: 'Менеджер'},
+        {role: 'EDITOR', translation: 'Редактор'},
+        {role: 'MEMBER', translation: 'Участник'},
+        {role: 'BLOCKED', translation: 'Заблокирован'}])
     const [selectedRole, setSelectedRole] = useState(); //
     const toast = useRef(null);
     const navigate = useNavigate()
@@ -85,7 +90,7 @@ export default function MemberRoleForm({channel_id, my_id, members, users}) {
     return (
         <div>
             <Dialog header="Изменить роль" className="card flex justify-content-center shadow-2 border-round" visible={isModalActive} onHide={() => setModalActive(false)} style={{ width: '40%' }}>
-                <form onSubmit={formik.handleSubmit} className="flex flex-column gap-4">
+                <form onSubmit={formik.handleSubmit} className="auth flex flex-column">
                     <div>
                         <span className="p-float-label">
                             <Dropdown
@@ -108,7 +113,7 @@ export default function MemberRoleForm({channel_id, my_id, members, users}) {
                             <Dropdown
                                 style={{ minWidth: '37vw' }}
                                 inputId="Роль"
-                                optionLabel="role"
+                                optionLabel="translation"
                                 value={selectedRole}
                                 options={roles}
                                 onChange={(e) => {
