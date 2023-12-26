@@ -10,6 +10,7 @@ function App() {
         <div className="App">
             <BrowserRouter>
                 <Routes>
+                    <Route index path="/" element={<AuthForm />} />
                     <Route path="/register" element={<RegForm />} />
                     <Route index path="/login" element={<AuthForm />} />
                     <Route path="/*" element={<Container />} />

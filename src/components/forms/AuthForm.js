@@ -9,8 +9,6 @@ import {useNavigate} from "react-router-dom";
 import {useFormik} from "formik";
 import {Toast} from "primereact/toast";
 import {classNames} from "primereact/utils";
-import {Divider} from "primereact/divider";
-import request from "../rest";
 import showToast from "../toast";
 
 function AuthForm() {

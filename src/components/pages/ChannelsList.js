@@ -60,7 +60,6 @@ function Channels() {
                     const data = response.json();
                     data.then(value => {
                         setAllChannels(value)
-                        console.log(value)
                     });
                 } else if (response.status === 401) {
                     navigate('/login')
@@ -93,7 +92,7 @@ function Channels() {
 
     const itemTemplate = (channel) => {
         return (
-            <div className="col-12">
+            <div className="col-12 beige-color m-2">
                 <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
                     <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
                         <div className="flex flex-column align-items-center sm:align-items-start gap-3">
@@ -116,11 +115,11 @@ function Channels() {
     };
 
     return (
-        <div className="p-8">
+        <div className="m-8">
             <div className="container">
                 <div className="box-1">
                     <h1>Каналы</h1>
-                    <p>
+                    <p className="text-xl font-light text-900">
                         Каналы нужны, чтобы люди могли объединяться и создавать мероприятия от имени сообщества.
                     </p>
                 </div>
@@ -131,7 +130,7 @@ function Channels() {
             {!(typeof myChannels === "undefined") && !(typeof allChannels === "undefined") ?
                 <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
                     <TabPanel header="Мои каналы">
-                        <DataView value={myChannels.map((elem) => elem.channel).filter((elem) => !elem.is_personal)} itemTemplate={itemTemplate} />
+                        <DataView  value={myChannels.map((elem) => elem.channel).filter((elem) => !elem.is_personal)} itemTemplate={itemTemplate} />
                     </TabPanel>
                     <TabPanel header="Все каналы">
                         <DataView value={allChannels.filter((elem) => !elem.is_personal)} itemTemplate={itemTemplate} />

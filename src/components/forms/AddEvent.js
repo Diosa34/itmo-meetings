@@ -12,6 +12,7 @@ import {AutoComplete} from "primereact/autocomplete";
 import {Dropdown} from "primereact/dropdown";
 import ErrorPage from "../pages/ErrorPage";
 import {Toast} from "primereact/toast";
+import '../../style/FormBackground.css';
 
 export default function AddEvent() {
     const [isModalActive, setModalActive] = useState(false);
