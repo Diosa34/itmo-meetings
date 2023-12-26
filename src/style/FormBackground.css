@@ -1,47 +1,47 @@
 .i1 {
-    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\FriendsO.png");
+    background-image: url("../resources/FriendsO.png");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
 }
 
 .i2 {
-    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\ForestO.png");
+    background-image: url("../resources/ForestO.png");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
 }
 
 .i3 {
-    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\ClassO.png");
+    background-image: url("../resources/ClassO.png");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
 }
 
 .i4 {
-    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\Camp.png");
+    background-image: url("../resources/Camp.png");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
 }
 
 .i5 {
-    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\MapO.png");
+    background-image: url("../resources/MapO.png");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
 }
 
 .i6 {
-    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\StreetO.png");
+    background-image: url("../resources/StreetO.png");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
 }
 
 .i7 {
-    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\TeaO.png");
+    background-image: url("../resources/TeaO.png");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
