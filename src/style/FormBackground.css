@@ -1,0 +1,56 @@
+.i1 {
+    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\FriendsO.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.i2 {
+    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\ForestO.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.i3 {
+    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\ClassO.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.i4 {
+    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\Camp.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.i5 {
+    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\MapO.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.i6 {
+    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\StreetO.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.i7 {
+    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\TeaO.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.beige-color {
+    background-color: #f5f5ff;
+}
+
+.brown-color {
+    background-color: #fdf8f8;
+}
