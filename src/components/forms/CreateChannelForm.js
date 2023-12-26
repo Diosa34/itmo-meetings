@@ -9,8 +9,9 @@ import {InputText} from "primereact/inputtext";
 import {Dialog} from "primereact/dialog";
 import {Checkbox} from "primereact/checkbox";
 import {useNavigate} from "react-router-dom";
+import HOST from "../../host";
 
-export default function CreateChannelForm({defaultName='', defaultDescription='', defaultIsPublic=true, path=`http://localhost:8000/channel/`, method='POST', buttonTitle='Создать канал'}) {
+export default function CreateChannelForm({defaultName='', defaultDescription='', defaultIsPublic=true, path=`${HOST}/channel/`, method='POST', buttonTitle='Создать канал'}) {
     const [isModalActive, setModalActive] = useState(false);
     const toast = useRef(null);
     const navigate = useNavigate()

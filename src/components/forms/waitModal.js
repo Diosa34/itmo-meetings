@@ -6,6 +6,7 @@ import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {Button} from "primereact/button";
 import {useNavigate} from "react-router-dom";
+import HOST from "../../host";
 
 export default function WaitModal({setModalActive, isModalActive, users, channel_id}) {
     const [selectedMembers, setSelectedMembers] = useState([]);
@@ -14,7 +15,7 @@ export default function WaitModal({setModalActive, isModalActive, users, channel
     const navigate = useNavigate()
 
     const confirm = (member_id) => {
-        fetch(`http://localhost:8000/channel/${channel_id}/member/${member_id}/confirm/`,
+        fetch(`${HOST}/channel/${channel_id}/member/${member_id}/confirm/`,
             {
                 method: 'PATCH',
                 headers: {

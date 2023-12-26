@@ -8,6 +8,7 @@ import {useNavigate} from "react-router-dom";
 import {Toast} from "primereact/toast";
 import showToast from "../toast";
 import {Button} from "primereact/button";
+import HOST from "../../host";
 
 function Profile() {
     const [username, setUsername] = useState();
@@ -25,7 +26,7 @@ function Profile() {
     const profileToast = useRef(null);
 
     useEffect(() => {
-        fetch('http://localhost:8000/user/me/',
+        fetch(`${HOST}/user/me/`,
                 {
                     method: 'GET',
                     headers: {
@@ -62,7 +63,7 @@ function Profile() {
     }, [navigate, profileToast, token]);
 
     const editProfile = () => {
-        fetch(`http://localhost:8000/user/${user_id}/`,
+        fetch(`${HOST}/user/${user_id}/`,
             {
                 method: 'PUT',
                 headers: {
@@ -111,7 +112,7 @@ function Profile() {
     }
 
     const deleteAccount = () => {
-        fetch(`http://localhost:8000/user/me/`,
+        fetch(`${HOST}/user/me/`,
             {
                 method: 'DELETE',
                 headers: {

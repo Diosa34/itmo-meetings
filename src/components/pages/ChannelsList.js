@@ -7,6 +7,7 @@ import {Button} from "primereact/button";
 import { DataView } from 'primereact/dataview';
 import {TabPanel, TabView} from "primereact/tabview";
 import CreateChannelForm from "../forms/CreateChannelForm";
+import HOST from "../../host";
 
 
 function Channels() {
@@ -19,7 +20,7 @@ function Channels() {
 
     useEffect( () => {
         const token = 'Bearer ' + localStorage.getItem('token')
-        fetch('http://localhost:8000/user/me/channels',
+        fetch(`${HOST}/user/me/channels`,
             {
                 method: 'GET',
                 headers: {
@@ -45,7 +46,7 @@ function Channels() {
 
     useEffect( () => {
         const token = 'Bearer ' + localStorage.getItem('token')
-        fetch('http://localhost:8000/channel/list',
+        fetch(`${HOST}/channel/list`,
             {
                 method: 'GET',
                 headers: {

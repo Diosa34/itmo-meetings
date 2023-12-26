@@ -13,6 +13,7 @@ import {Dropdown} from "primereact/dropdown";
 import ErrorPage from "../pages/ErrorPage";
 import {Toast} from "primereact/toast";
 import '../../style/FormBackground.css';
+import HOST from "../../host";
 
 export default function AddEvent() {
     const [isModalActive, setModalActive] = useState(false);
@@ -78,7 +79,7 @@ export default function AddEvent() {
         },
         onSubmit: (data) => {
             const token = 'Bearer ' + localStorage.getItem('token')
-            fetch(`http://localhost:8000/meeting/`,
+            fetch(`${HOST}/meeting/`,
             {
                     method: 'POST',
                     headers: {
@@ -149,7 +150,7 @@ export default function AddEvent() {
 
     function getMyChannels() {
         const token = 'Bearer ' + localStorage.getItem('token')
-        fetch(`http://localhost:8000/user/me/channels`,
+        fetch(`${HOST}/user/me/channels`,
             {
                 method: 'GET',
                 headers: {

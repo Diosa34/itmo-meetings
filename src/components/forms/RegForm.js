@@ -16,6 +16,7 @@ import ShowError from "../ShowError";
 import {Toast} from "primereact/toast";
 import showToast from "../toast";
 import validate from "../../validation/register";
+import HOST from "../../host";
 
 function RegForm() {
 
@@ -90,7 +91,7 @@ function RegForm() {
         validate: (data) => {return validate(data, birthDay)},
         onSubmit: (data) => {
             request(
-                'http://localhost:8000/user/',
+                `${HOST}/user/`,
                 'POST',
                 'application/json',
                 {

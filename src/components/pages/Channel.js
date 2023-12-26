@@ -10,6 +10,7 @@ import {Sidebar} from "primereact/sidebar";
 import WaitModal from "../forms/waitModal";
 import CreateChannelForm from "../forms/CreateChannelForm";
 import MemberRoleForm from "../forms/MemberRoleForm";
+import HOST from "../../host";
 
 export default function Channel() {
     const params = useParams();
@@ -25,7 +26,7 @@ export default function Channel() {
     const token = 'Bearer ' + localStorage.getItem('token')
     
     useEffect(() => {
-        fetch(`http://localhost:8000/channel/${params.id}/`,
+        fetch(`${HOST}/channel/${params.id}/`,
             {
                 method: 'GET',
                 headers: {
@@ -65,7 +66,7 @@ export default function Channel() {
     }, [navigate, params.id, token]);
 
     function getUser(id) {
-        fetch(`http://localhost:8000/user/${id}/`,
+        fetch(`${HOST}/user/${id}/`,
             {
                 method: 'GET',
                 headers: {
@@ -93,7 +94,7 @@ export default function Channel() {
     }
 
     useEffect(() => {
-        fetch('http://localhost:8000/meeting/list/',
+        fetch(`${HOST}/meeting/list/`,
             {
                 method: 'GET',
                 headers: {
@@ -128,7 +129,7 @@ export default function Channel() {
             }
         )
 
-        fetch(`http://localhost:8000/channel/${params.id}/member/list/`,
+        fetch(`${HOST}/channel/${params.id}/member/list/`,
             {
                 method: 'GET',
                 headers: {
@@ -162,7 +163,7 @@ export default function Channel() {
             }
         )
 
-        fetch(`http://localhost:8000/user/me/`,
+        fetch(`${HOST}/user/me/`,
             {
                 method: 'GET',
                 headers: {
@@ -199,7 +200,7 @@ export default function Channel() {
     const failToast = useRef();
 
     const deleteChannel = () => {
-        fetch(`http://localhost:8000/channel/${params.id}`,
+        fetch(`${HOST}/channel/${params.id}`,
             {
                 method: 'DELETE',
                 headers: {
@@ -231,7 +232,7 @@ export default function Channel() {
     }
 
     const leaveChannel = () => {
-        fetch(`http://localhost:8000/channel/${params.id}/subscribe/`,
+        fetch(`${HOST}/channel/${params.id}/subscribe/`,
             {
                 method: 'DELETE',
                 headers: {
@@ -263,7 +264,7 @@ export default function Channel() {
     }
 
     const joinToChannel = () => {
-        fetch(`http://localhost:8000/channel/${params.id}/subscribe/`,
+        fetch(`${HOST}/channel/${params.id}/subscribe/`,
             {
                 method: 'POST',
                 headers: {
@@ -347,7 +348,7 @@ export default function Channel() {
                             </p>
                             <Button label="Удалить канал"  icon="pi pi-times" iconPos="right" outlined onClick={deleteChannel}/>
                             <p></p>
-                            <CreateChannelForm defaultName={channel.name} defaultDescription={channel.description} defaultIsPublic={channel.is_public} path={`http://localhost:8000/channel/${channel.id}/`} method='PUT' buttonTitle='Редактировать канал' />
+                            <CreateChannelForm defaultName={channel.name} defaultDescription={channel.description} defaultIsPublic={channel.is_public} path={`${HOST}/channel/${channel.id}/`} method='PUT' buttonTitle='Редактировать канал' />
                             <p></p>
                             <Button label="Заявки на вступление"  icon="pi pi-user" iconPos="right" outlined onClick={setWaitModal}/>
                             <WaitModal isModalActive={waitModal} setModalActive={setWaitModal} channel_id={params.id} users={members}/>

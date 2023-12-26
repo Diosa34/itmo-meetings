@@ -6,6 +6,7 @@ import { Toast } from 'primereact/toast';
 import {Dialog} from "primereact/dialog";
 import {useNavigate} from "react-router-dom";
 import {Dropdown} from "primereact/dropdown";
+import HOST from "../../host";
 
 export default function MemberRoleForm({channel_id, my_id, members, users}) {
     const [isModalActive, setModalActive] = useState(false);
@@ -46,7 +47,7 @@ export default function MemberRoleForm({channel_id, my_id, members, users}) {
             return errors;
         },
         onSubmit: (data) => {
-            fetch(`http://localhost:8000/channel/${channel_id}/member/${selectedUser.id}/role/`,
+            fetch(`${HOST}/channel/${channel_id}/member/${selectedUser.id}/role/`,
                 {
                     method: 'PATCH',
                     headers: {

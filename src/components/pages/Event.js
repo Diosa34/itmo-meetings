@@ -6,6 +6,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {Toast} from "primereact/toast";
 import useEvent from "../useEvent";
+import HOST from "../../host";
 
 
 function Event() {
@@ -34,7 +35,7 @@ function Event() {
     };
 
     const getChannel = () => {
-        fetch(`http://localhost:8000/channel/${event.channel_id}/`,
+        fetch(`${HOST}/channel/${event.channel_id}/`,
             {
                 method: 'GET',
                 headers: {
@@ -64,7 +65,7 @@ function Event() {
     }
 
     useEffect( () => {
-        fetch(`http://localhost:8000/meeting/${params.id}/`,
+        fetch(`${HOST}/meeting/${params.id}/`,
             {
                 method: 'GET',
                 headers: {
@@ -89,7 +90,7 @@ function Event() {
         )
 
 
-        fetch(`http://localhost:8000/meeting/${params.id}/feedback/`,
+        fetch(`${HOST}/meeting/${params.id}/feedback/`,
             {
                 method: 'GET',
                 headers: {
@@ -116,7 +117,7 @@ function Event() {
             }
         )
 
-        fetch(`http://localhost:8000/user/me/meetings/`,
+        fetch(`${HOST}/user/me/meetings/`,
             {
                 method: 'GET',
                 headers: {
@@ -145,7 +146,7 @@ function Event() {
     }, [navigate, params.id, token]);
 
     const joinToMeeting = () => {
-        fetch(`http://localhost:8000/meeting/${params.id}/member/`,
+        fetch(`${HOST}/meeting/${params.id}/member/`,
             {
                 method: 'POST',
                 headers: {
@@ -171,7 +172,7 @@ function Event() {
     }
 
     const leftMeeting = () => {
-        fetch(`http://localhost:8000/meeting/${params.id}/member/me/`,
+        fetch(`${HOST}/meeting/${params.id}/member/me/`,
             {
                 method: 'DELETE',
                 headers: {

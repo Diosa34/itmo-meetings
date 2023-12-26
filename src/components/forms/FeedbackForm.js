@@ -5,6 +5,7 @@ import {Dialog} from "primereact/dialog";
 import showToast from "../toast";
 import {Toast} from "primereact/toast";
 import somePost from "../getFetcher";
+import HOST from "../../host";
 
 function FeedbackForm({setModalActive, isModalActive, isRatingExists, actualRating=0, meeting_id}) {
     const [rating, setRating] = useState(actualRating);
@@ -16,7 +17,7 @@ function FeedbackForm({setModalActive, isModalActive, isRatingExists, actualRati
     };
 
     const createFeedback = async () => {
-        await fetch(`http://localhost:8000/meeting/${meeting_id}/feedback/`,
+        await fetch(`${HOST}/meeting/${meeting_id}/feedback/`,
             {
                 method: 'POST',
                 headers: {
@@ -48,7 +49,7 @@ function FeedbackForm({setModalActive, isModalActive, isRatingExists, actualRati
     }
 
     const editFeedback = async () => {
-        await fetch(`http://localhost:8000/meeting/${meeting_id}/feedback/`,
+        await fetch(`${HOST}/meeting/${meeting_id}/feedback/`,
             {
                 method: 'PUT',
                 headers: {
@@ -78,7 +79,7 @@ function FeedbackForm({setModalActive, isModalActive, isRatingExists, actualRati
     }
 
     const deleteFeedback = async () => {
-        await fetch(`http://localhost:8000/meeting/${meeting_id}/feedback/`,
+        await fetch(`${HOST}/meeting/${meeting_id}/feedback/`,
             {
                 method: 'DELETE',
                 headers: {

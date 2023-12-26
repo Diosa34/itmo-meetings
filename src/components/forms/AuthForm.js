@@ -10,6 +10,7 @@ import {useFormik} from "formik";
 import {Toast} from "primereact/toast";
 import {classNames} from "primereact/utils";
 import showToast from "../toast";
+import HOST from "../../host";
 
 function AuthForm() {
     const navigate = useNavigate();
@@ -62,7 +63,7 @@ function AuthForm() {
             }
             formBody = formBody.join("&");
 
-            await fetch('http://localhost:8000/auth/token',
+            await fetch(`${HOST}/auth/token`,
                 {
                     method: 'POST',
                     headers: {

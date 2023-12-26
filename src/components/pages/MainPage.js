@@ -6,6 +6,7 @@ import AddEvent from "../forms/AddEvent";
 import EventsContainer from "../EventsContainer";
 import {useNavigate} from "react-router-dom";
 import CreateChannelForm from "../forms/CreateChannelForm";
+import HOST from "../../host";
 
 
 function MainPage() {
@@ -14,7 +15,7 @@ function MainPage() {
 
     useEffect(() => {
         const token = 'Bearer ' + localStorage.getItem('token')
-        fetch('http://localhost:8000/meeting/list/',
+        fetch(`${HOST}/meeting/list/`,
             {
                 method: 'GET',
                 headers: {
