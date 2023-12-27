@@ -68,6 +68,7 @@ function Profile() {
                 method: 'PUT',
                 headers: {
                     'Accept': 'application/json',
+                    'Content-type': 'application/json',
                     'Access-Control-Allow-Origin': 'http://localhost:3000',
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
@@ -147,7 +148,6 @@ function Profile() {
                         <InplaceContent>
                             <InputText value={username} onChange={(e) => {
                                 setUsername(e.target.value)
-                                editProfile()
                             }} autoFocus />
                         </InplaceContent>
                     </Inplace>
@@ -158,7 +158,6 @@ function Profile() {
                                 value={surname}
                                 onChange={(e) => {
                                     setSurname(e.target.value);
-                                    editProfile()
                                 }
                             }
                             />
@@ -169,7 +168,6 @@ function Profile() {
                         <InplaceContent>
                             <InputText value={name} onChange={(e) => {
                                 setName(e.target.value)
-                                editProfile()
                             }} autoFocus />
                         </InplaceContent>
                     </Inplace>
@@ -178,7 +176,6 @@ function Profile() {
                         <InplaceContent>
                             <InputText value={patronymic} onChange={(e) => {
                                 setPatronymic(e.target.value)
-                                editProfile()
                             }
                             } autoFocus />
                         </InplaceContent>
@@ -196,7 +193,6 @@ function Profile() {
                             <InplaceContent>
                                 <InputText value={telephone} onChange={(e) => {
                                     setTelephone(e.target.value)
-                                    editProfile()
                                 }} autoFocus />
                             </InplaceContent>
                     </Inplace>
@@ -205,7 +201,6 @@ function Profile() {
                             <InplaceContent>
                                 <InputText value={email} onChange={(e) => {
                                     setEmail(e.target.value)
-                                    editProfile()
                                 }} autoFocus />
                             </InplaceContent>
                     </Inplace>
@@ -214,7 +209,6 @@ function Profile() {
                             <InplaceContent>
                                 <InputText value={date_of_birth} onChange={(e) => {
                                     setDate_of_birth(e.target.value)
-                                    editProfile()
                                 }} autoFocus />
                             </InplaceContent>
                     </Inplace>
@@ -223,6 +217,7 @@ function Profile() {
                 </div>
                 <div className="middle">
                     <h2>Доп. информация</h2>
+                    <p>Дополнительная информация отсутствует</p>
                 </div>
 
             </div>

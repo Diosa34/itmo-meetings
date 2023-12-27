@@ -10,7 +10,7 @@ import showToast from "./toast";
 export default function EventsContainer({events}) {
     const [layout, setLayout] = useState('grid');
     const navigate = useNavigate();
-    const backgrounds = ['i1', 'i2', 'i3']
+    const backgrounds = ['i1', 'i2', 'i3', 'i4', 'i5', 'i6', 'i7']
     let backgroundIndex = 0;
 
 

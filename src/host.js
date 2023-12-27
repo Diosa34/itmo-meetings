@@ -1,2 +1,2 @@
-const HOST = 'http://host405.ru:8080'
+const HOST = 'http://localhost:8000'
 export default HOST;

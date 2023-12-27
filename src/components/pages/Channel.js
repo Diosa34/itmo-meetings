@@ -313,60 +313,63 @@ export default function Channel() {
                             <div className="box-1">
                                 <h1>{channel.name}</h1>
                             </div>
+                            <div className="box-2">
+                                <AddEvent />
+                            </div>
                         </div>
                         <p className="text-xl">{channel.description}</p>
                         <EventsContainer events={events}/>
                     </div>
-                    {!(typeof members === "undefined") ?
-                <div className="p-5 right-area">
-                    <div className="flex gap-2 justify-content-center">
-                        <Button icon="pi pi-cog" onClick={() => setVisibleRight(true)} />
-                    </div>
-                    <Sidebar visible={visibleRight && (members.filter((elem) => {
-                        return elem.user_id === me.id}).length === 0)} position="right" onHide={() => setVisibleRight(false)}>
-                        <div>
-                            <h2>Добро пожаловать!</h2>
-                            <p>
-                                Вы можете стать участником канала.
-                            </p>
-                            <Button label="Вступить в канал"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToChannel}/>
+                            {!(typeof members === "undefined") ?
+                        <div className="p-5 right-area">
+                            <div className="flex gap-2 justify-content-center">
+                                <Button icon="pi pi-cog" onClick={() => setVisibleRight(true)} />
+                            </div>
+                            <Sidebar visible={visibleRight && (members.filter((elem) => {
+                                return elem.user_id === me.id}).length === 0)} position="right" onHide={() => setVisibleRight(false)}>
+                                <div>
+                                    <h2>Добро пожаловать!</h2>
+                                    <p>
+                                        Вы можете стать участником канала.
+                                    </p>
+                                    <Button label="Вступить в канал"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToChannel}/>
+                                </div>
+                            </Sidebar>
+                            <Sidebar visible={visibleRight && (members.filter((elem) => {return elem.user_id === me.id && elem.permissions === 0}).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
+                                <div>
+                                    <h2>Добро пожаловать!</h2>
+                                    <p>
+                                        Ваша заявка на добавление в канал на рассмотрении.
+                                    </p>
+                                </div>
+                            </Sidebar>
+                            <Sidebar visible={visibleRight && (members.filter((elem) => (elem.user_id === me.id && elem.is_owner)).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
+                                <div className="gap-5">
+                                    <h2>Добро пожаловать!</h2>
+                                    <p>
+                                        Вы являетесь владельцем канала.
+                                    </p>
+                                    <Button label="Удалить канал"  icon="pi pi-times" iconPos="right" outlined onClick={deleteChannel}/>
+                                    <p></p>
+                                    <CreateChannelForm defaultName={channel.name} defaultDescription={channel.description} defaultIsPublic={channel.is_public} path={`${HOST}/channel/${channel.id}/`} method='PUT' buttonTitle='Редактировать канал' />
+                                    <p></p>
+                                    <Button label="Заявки на вступление"  icon="pi pi-user" iconPos="right" outlined onClick={setWaitModal}/>
+                                    <WaitModal isModalActive={waitModal} setModalActive={setWaitModal} channel_id={params.id} users={members}/>
+                                    <p></p>
+                                    <MemberRoleForm channel_id={channel.id} my_id={me.id} members={members} users={users.filter((elem) => elem.id !== me.id)}/>
+                                </div>
+                            </Sidebar>
+                            <Sidebar visible={visibleRight && (members.filter((elem) => {return elem.user_id === me.id && elem.permissions !== 0 && !elem.is_owner}).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
+                                <div>
+                                    <h2>Добро пожаловать!</h2>
+                                    <p>
+                                        Вы являетесь участником канала.
+                                    </p>
+                                    <Button label="Отписаться" icon="pi pi-minus" iconPos="right" outlined onClick={leaveChannel}/>
+                                </div>
+                            </Sidebar>
                         </div>
-                    </Sidebar>
-                    <Sidebar visible={visibleRight && (members.filter((elem) => {return elem.user_id === me.id && elem.permissions === 0}).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
-                        <div>
-                            <h2>Добро пожаловать!</h2>
-                            <p>
-                                Ваша заявка на добавление в канал на рассмотрении.
-                            </p>
-                        </div>
-                    </Sidebar>
-                    <Sidebar visible={visibleRight && (members.filter((elem) => (elem.user_id === me.id && elem.is_owner)).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
-                        <div className="gap-5">
-                            <h2>Добро пожаловать!</h2>
-                            <p>
-                                Вы являетесь владельцем канала.
-                            </p>
-                            <Button label="Удалить канал"  icon="pi pi-times" iconPos="right" outlined onClick={deleteChannel}/>
-                            <p></p>
-                            <CreateChannelForm defaultName={channel.name} defaultDescription={channel.description} defaultIsPublic={channel.is_public} path={`${HOST}/channel/${channel.id}/`} method='PUT' buttonTitle='Редактировать канал' />
-                            <p></p>
-                            <Button label="Заявки на вступление"  icon="pi pi-user" iconPos="right" outlined onClick={setWaitModal}/>
-                            <WaitModal isModalActive={waitModal} setModalActive={setWaitModal} channel_id={params.id} users={members}/>
-                            <p></p>
-                            <MemberRoleForm channel_id={channel.id} my_id={me.id} members={members} users={users.filter((elem) => elem.id !== me.id)}/>
-                        </div>
-                    </Sidebar>
-                    <Sidebar visible={visibleRight && (members.filter((elem) => {return elem.user_id === me.id && elem.permissions !== 0 && !elem.is_owner}).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
-                        <div>
-                            <h2>Добро пожаловать!</h2>
-                            <p>
-                                Вы являетесь участником канала.
-                            </p>
-                            <Button label="Отписаться" icon="pi pi-minus" iconPos="right" outlined onClick={leaveChannel}/>
-                        </div>
-                    </Sidebar>
-                </div>
-                : null }
+                        : null }
                     </>
                 : null }
                 <Toast ref={failToast} />
