@@ -8,6 +8,7 @@ import { DataView } from 'primereact/dataview';
 import {TabPanel, TabView} from "primereact/tabview";
 import CreateChannelForm from "../forms/CreateChannelForm";
 import HOST from "../../host";
+import {InputText} from "primereact/inputtext";
 
 
 function Channels() {
@@ -17,6 +18,8 @@ function Channels() {
     const [activeIndex, setActiveIndex] = useState(0);
 
     const navigate = useNavigate();
+
+    const [channelFilterValue, setChannelFilterValue] = useState('');
 
     useEffect( () => {
         const token = 'Bearer ' + localStorage.getItem('token')
@@ -105,7 +108,7 @@ function Channels() {
                             <div className="text-xl font-light text-900">Количество участников: {channel.members_cnt}</div>
                         </div>
                         <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-                            <Button visible={!channel.is_personal} label="Перейти в канал" icon="pi pi-arrow-right" text raised size="small" iconPos="right" onClick={(e) => {
+                            <Button visible={!channel.is_personal} label="Перейти в сообщество" icon="pi pi-arrow-right" text raised size="small" iconPos="right" onClick={(e) => {
                                 navigate(`/channels/${channel.id}`)
                             }}/>
                         </div>
@@ -116,13 +119,21 @@ function Channels() {
     };
 
     return (
-        <div className="m-8">
+        <div className="m-7">
             <div className="container">
                 <div className="box-1">
-                    <h1>Каналы</h1>
+                    <h1>Сообщества</h1>
                     <p className="text-xl font-light text-900">
-                        Каналы нужны, чтобы люди могли объединяться и создавать мероприятия от имени сообщества.
+                        Сообщества нужны, чтобы люди могли объединяться и создавать мероприятия от имени сообщества.
                     </p>
+                    <span className="p-input-icon-left ml-10 mr-auto">
+                        <i className="pi pi-search" />
+                        <InputText
+                            className="max-w-full"
+                            value={channelFilterValue}
+                            onChange={(e) => {setChannelFilterValue(e.target.value)}}
+                            placeholder="Поиск сообществ" />
+                    </span>
                 </div>
                 <div className="box-2">
                     <CreateChannelForm />
@@ -130,11 +141,15 @@ function Channels() {
             </div>
             {!(typeof myChannels === "undefined") && !(typeof allChannels === "undefined") ?
                 <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
-                    <TabPanel header="Мои каналы">
-                        <DataView  value={myChannels.map((elem) => elem.channel).filter((elem) => !elem.is_personal)} itemTemplate={itemTemplate} />
+                    <TabPanel header="Мои сообщества">
+                        <DataView  value={myChannels.map((elem) => elem.channel).filter((elem) => (!elem.is_personal &&
+                            ((elem.name.toLowerCase()).includes(channelFilterValue.toLowerCase()) || (elem.description.toLowerCase()).includes(channelFilterValue.toLowerCase()))))
+                        } itemTemplate={itemTemplate} />
                     </TabPanel>
-                    <TabPanel header="Все каналы">
-                        <DataView value={allChannels.filter((elem) => !elem.is_personal)} itemTemplate={itemTemplate} />
+                    <TabPanel header="Все сообщества">
+                        <DataView value={allChannels.filter((elem) => (!elem.is_personal &&
+                            ((elem.name.toLowerCase()).includes(channelFilterValue.toLowerCase()) || (elem.description.toLowerCase()).includes(channelFilterValue.toLowerCase())))
+                        )} itemTemplate={itemTemplate} />
                     </TabPanel>
                 </TabView>
             : null}

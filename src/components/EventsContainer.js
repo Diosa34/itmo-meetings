@@ -2,10 +2,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { Button } from 'primereact/button';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
-import { Rating } from 'primereact/rating';
-import { Tag } from 'primereact/tag';
 import {useNavigate} from "react-router-dom";
-import showToast from "./toast";
+import {InputText} from "primereact/inputtext";
 
 export default function EventsContainer({events}) {
     const [layout, setLayout] = useState('grid');
@@ -13,7 +11,8 @@ export default function EventsContainer({events}) {
     const backgrounds = ['i1', 'i2', 'i3', 'i4', 'i5', 'i6', 'i7']
     let backgroundIndex = 0;
 
-
+    const [globalFilterValue, setGlobalFilterValue] = useState('');
+    
     const listItem = (event) => {
         return (
             <div className="col-12 m-2 brown-color">
@@ -86,15 +85,29 @@ export default function EventsContainer({events}) {
 
     const header = () => {
         return (
-            <div className="flex justify-content-end">
-                <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
-            </div>
+            <>
+                {!(typeof events === "undefined") ?
+                    <div className="flex justify-content-between">
+                        <span className="p-input-icon-left">
+                                <i className="pi pi-search" />
+                                <InputText value={globalFilterValue} onChange={(e) => {
+                                    setGlobalFilterValue(e.target.value)
+                                }} placeholder="Поиск мероприятий" />
+                        </span>
+                        <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
+                    </div>
+                    : null}
+            </>
         );
     };
 
     return (
         <div className="card">
-            <DataView value={events} itemTemplate={itemTemplate} layout={layout} header={header()} />
+            {!(typeof events === "undefined") ?
+            <DataView
+                value={events.filter(elem => (elem.title.toLowerCase()).includes(globalFilterValue.toLowerCase()) || (elem.description.toLowerCase()).includes(globalFilterValue.toLowerCase()) || (elem.address.toLowerCase()).includes(globalFilterValue.toLowerCase()))}
+                itemTemplate={itemTemplate} layout={layout} header={header()} />
+            : null}
         </div>
     )
 }

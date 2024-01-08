@@ -22,8 +22,8 @@ export default function AddEvent() {
     const [selectedUnit, setSelectedUnit] = useState('мин.');
     const [error, setError] = useState({
         code: 500,
-        title: 'Каналы пользователя не были загружены',
-        message: 'Доступ к каналу ограничен для данного пользователя'})
+        title: 'Сообщества пользователя не были загружены',
+        message: 'Доступ к сообществу ограничен для данного пользователя'})
     const navigate = useNavigate()
 
     const footerContent = (
@@ -145,7 +145,7 @@ export default function AddEvent() {
                             title: 'Мероприятие не создано',
                             message: 'Доступ ограничен для данного пользователя'})
                             showError()
-                        // showToast(cardToast, 'error', 'Ошибка', 'Участники канала недоступны');
+                        // showToast(cardToast, 'error', 'Ошибка', 'Участники сообщества недоступны');
                     }
                 }
             )
@@ -187,20 +187,20 @@ export default function AddEvent() {
                     // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
                 } else if (response.status === 422) {
                     setError({code: response.status,
-                        title: 'Каналы пользователя не были загружены',
+                        title: 'Сообщества пользователя не были загружены',
                         message: 'Сломанный запрос'})
                     // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
                 } else if (response.status === 500) {
                     setError({code: response.status,
-                        title: 'Каналы пользователя не были загружены',
+                        title: 'Сообщества пользователя не были загружены',
                         message: 'Ошибка сервера, не принимайте на свой счёт'})
                     // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
                 } else if (response.status === 403) {
                     setError({
                         code: response.status,
-                        title: 'Каналы пользователя не были загружены',
-                        message: 'Доступ к каналу ограничен для данного пользователя'})
-                    // showToast(cardToast, 'error', 'Ошибка', 'Участники канала недоступны');
+                        title: 'Сообщества пользователя не были загружены',
+                        message: 'Доступ к сообществу ограничен для данного пользователя'})
+                    // showToast(cardToast, 'error', 'Ошибка', 'Участники сообщества недоступны');
                 }
             }
         )
@@ -416,7 +416,7 @@ export default function AddEvent() {
                         <span className="p-float-label">
                             <Dropdown
                                 style={{ minWidth: '40vw', minHeight: '4vw'}}
-                                inputId="Канал"
+                                inputId="Сообщество"
                                 optionLabel="name"
                                 value={selectedChannel}
                                 options={myChannels}
@@ -426,7 +426,7 @@ export default function AddEvent() {
                                 }}
                                 // placeholder="Выберите от чьего имени создадите мероприятие"
                             />
-                            <label className="required" htmlFor="Канал">Выберите, создадите мероприятие от своего имени или одного из каналов, вдаельцем котрого вы являетесь</label>
+                            <label className="required" htmlFor="Сообщество">Выберите, создадите мероприятие от своего имени или одного из сообществ, вдаельцем котрого вы являетесь</label>
                         </span>
                         {getFormErrorMessage('channel_id')}
                     </div>

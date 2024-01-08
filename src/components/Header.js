@@ -8,7 +8,7 @@ function Header() {
     const [activeIndex, setActiveIndex] = useState(0);
     const items = [
         {label: 'Главная', icon: 'pi pi-fw pi-home', link: "/catalog"},
-        {label: 'Каналы', icon: 'pi pi-fw pi-sitemap', link: '/channels'},
+        {label: 'Сообщества', icon: 'pi pi-fw pi-sitemap', link: '/channels'},
         {icon: 'pi pi-fw pi-user', link: '/profile'}
     ];
 
@@ -16,7 +16,10 @@ function Header() {
 
     return (
         <div className="panel">
-            <div className='logo'>
+            <div className='logo' onClick={(e) => {
+                navigate("/catalog", { replace: false })
+                setActiveIndex(0)
+            }}>
                 ITMO.MEETINGS
             </div>
             <TabMenu className='menu' model={items} activeIndex={activeIndex} onTabChange={(e) => {

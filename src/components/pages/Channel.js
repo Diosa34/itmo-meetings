@@ -47,18 +47,18 @@ export default function Channel() {
                     // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
                 } else if (response.status === 422) {
                     setRequestError({code: response.status,
-                        title: 'Информация о канале не была загружена',
+                        title: 'Информация о сообществе не была загружена',
                         message: 'Сломанный запрос'})
                     // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
                 } else if (response.status === 500) {
                     setRequestError({code: response.status,
-                        title: 'Информация о канале не была загружена',
+                        title: 'Информация о сообществе не была загружена',
                         message: 'Ошибка сервера, не принимайте на свой счёт'})
                     // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
                 } else if (response.status === 403) {
                     setRequestError({code: response.status,
-                        title: 'Информация о канале не была загружена',
-                        message: 'Доступ к каналу ограничен для данного пользователя'})
+                        title: 'Информация о сообществе не была загружена',
+                        message: 'Доступ к сообществу ограничен для данного пользователя'})
                     // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
                 }
             }
@@ -117,12 +117,12 @@ export default function Channel() {
                     // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
                 } else if (response.status === 422) {
                     setRequestError({code: response.status,
-                        title: 'Список мероприятий канала не был загружен',
+                        title: 'Список мероприятий сообщества не был загружен',
                         message: 'Сломанный запрос'})
                     // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
                 } else if (response.status === 500) {
                     setRequestError({code: response.status,
-                        title: 'Список мероприятий канала не был загружен',
+                        title: 'Список мероприятий сообщества не был загружен',
                         message: 'Ошибка сервера, не принимайте на свой счёт'})
                     // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
                 }
@@ -151,12 +151,12 @@ export default function Channel() {
                     // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
                 } else if (response.status === 422) {
                     setRequestError({code: response.status,
-                        title: 'Список мероприятий канала не был загружен',
+                        title: 'Список мероприятий сообщества не был загружен',
                         message: 'Сломанный запрос'})
                     // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
                 } else if (response.status === 500) {
                     setRequestError({code: response.status,
-                        title: 'Список мероприятий канала не был загружен',
+                        title: 'Список мероприятий сообщества не был загружен',
                         message: 'Ошибка сервера, не принимайте на свой счёт'})
                     // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
                 }
@@ -184,12 +184,12 @@ export default function Channel() {
                     // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
                 } else if (response.status === 422) {
                     setRequestError({code: response.status,
-                        title: 'Список мероприятий канала не был загружен',
+                        title: 'Список мероприятий сообщества не был загружен',
                         message: 'Сломанный запрос'})
                     // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
                 } else if (response.status === 500) {
                     setRequestError({code: response.status,
-                        title: 'Список мероприятий канала не был загружен',
+                        title: 'Список мероприятий сообщества не был загружен',
                         message: 'Ошибка сервера, не принимайте на свой счёт'})
                     // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
                 }
@@ -218,12 +218,12 @@ export default function Channel() {
                     navigate('/login')
                 } else if (response.status === 422) {
                     setRequestError({code: response.status,
-                        title: 'Список мероприятий канала не был загружен',
+                        title: 'Список мероприятий сообщества не был загружен',
                         message: 'Сломанный запрос'})
                     // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
                 } else if (response.status === 500) {
                     setRequestError({code: response.status,
-                        title: 'Список мероприятий канала не был загружен',
+                        title: 'Список мероприятий сообщества не был загружен',
                         message: 'Ошибка сервера, не принимайте на свой счёт'})
                     // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
                 }
@@ -250,12 +250,12 @@ export default function Channel() {
                     navigate('/login')
                 } else if (response.status === 422) {
                     setRequestError({code: response.status,
-                        title: 'Список мероприятий канала не был загружен',
+                        title: 'Список мероприятий сообщества не был загружен',
                         message: 'Сломанный запрос'})
                     // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
                 } else if (response.status === 500) {
                     setRequestError({code: response.status,
-                        title: 'Список мероприятий канала не был загружен',
+                        title: 'Список мероприятий сообщества не был загружен',
                         message: 'Ошибка сервера, не принимайте на свой счёт'})
                     // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
                 }
@@ -285,12 +285,12 @@ export default function Channel() {
                     navigate('/login')
                 } else if (response.status === 422) {
                     setRequestError({code: response.status,
-                        title: 'Список мероприятий канала не был загружен',
+                        title: 'Список мероприятий сообщества не был загружен',
                         message: 'Сломанный запрос'})
                     // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
                 } else if (response.status === 500) {
                     setRequestError({code: response.status,
-                        title: 'Список мероприятий канала не был загружен',
+                        title: 'Список мероприятий сообщества не был загружен',
                         message: 'Ошибка сервера, не принимайте на свой счёт'})
                     // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
                 }
@@ -330,16 +330,16 @@ export default function Channel() {
                                 <div>
                                     <h2>Добро пожаловать!</h2>
                                     <p>
-                                        Вы можете стать участником канала.
+                                        Вы можете стать участником сообщества.
                                     </p>
-                                    <Button label="Вступить в канал"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToChannel}/>
+                                    <Button label="Вступить в сообщество"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToChannel}/>
                                 </div>
                             </Sidebar>
                             <Sidebar visible={visibleRight && (members.filter((elem) => {return elem.user_id === me.id && elem.permissions === 0}).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
                                 <div>
                                     <h2>Добро пожаловать!</h2>
                                     <p>
-                                        Ваша заявка на добавление в канал на рассмотрении.
+                                        Ваша заявка на добавление в сообщество на рассмотрении.
                                     </p>
                                 </div>
                             </Sidebar>
@@ -347,11 +347,11 @@ export default function Channel() {
                                 <div className="gap-5">
                                     <h2>Добро пожаловать!</h2>
                                     <p>
-                                        Вы являетесь владельцем канала.
+                                        Вы являетесь владельцем сообщества.
                                     </p>
-                                    <Button label="Удалить канал"  icon="pi pi-times" iconPos="right" outlined onClick={deleteChannel}/>
+                                    <Button label="Удалить сообщество"  icon="pi pi-times" iconPos="right" outlined onClick={deleteChannel}/>
                                     <p></p>
-                                    <CreateChannelForm defaultName={channel.name} defaultDescription={channel.description} defaultIsPublic={channel.is_public} path={`${HOST}/channel/${channel.id}/`} method='PUT' buttonTitle='Редактировать канал' />
+                                    <CreateChannelForm defaultName={channel.name} defaultDescription={channel.description} defaultIsPublic={channel.is_public} path={`${HOST}/channel/${channel.id}/`} method='PUT' buttonTitle='Редактировать сообщество' />
                                     <p></p>
                                     <Button label="Заявки на вступление"  icon="pi pi-user" iconPos="right" outlined onClick={setWaitModal}/>
                                     <WaitModal isModalActive={waitModal} setModalActive={setWaitModal} channel_id={params.id} users={members}/>
@@ -363,7 +363,7 @@ export default function Channel() {
                                 <div>
                                     <h2>Добро пожаловать!</h2>
                                     <p>
-                                        Вы являетесь участником канала.
+                                        Вы являетесь участником сообщества.
                                     </p>
                                     <Button label="Отписаться" icon="pi pi-minus" iconPos="right" outlined onClick={leaveChannel}/>
                                 </div>

@@ -23,6 +23,10 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    /*align-content: flex-start;*/
     gap: 2rem;
 }
 

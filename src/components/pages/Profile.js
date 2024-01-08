@@ -142,10 +142,14 @@ function Profile() {
             <div className="content">
                 <h1 className="title">Мой профиль</h1>
                 <div className="left">
-                    <Avatar className={'avatar'} icon="pi pi-user" size="xlarge" shape="circle" />
                     <div className="card">
                         <Inplace closable onClose={editProfile}>
-                            <InplaceDisplay>{username}</InplaceDisplay>
+                            <InplaceDisplay>
+                                <span className="inline-flex align-items-center gap-3">
+                                    <span >{username}</span>
+                                    <span className="pi pi-pencil"></span>
+                                </span>
+                            </InplaceDisplay>
                             <InplaceContent>
                                 <InputText value={username} onChange={(e) => {
                                     setUsername(e.target.value)
@@ -154,7 +158,12 @@ function Profile() {
                         </Inplace>
                     </div>
                     <Inplace closable className="child"  onClose={editProfile}>
-                        <InplaceDisplay>{surname}</InplaceDisplay>
+                        <InplaceDisplay>
+                            <span className="inline-flex align-items-center gap-3">
+                                <span >{surname}</span>
+                                <span className="pi pi-pencil"></span>
+                            </span>
+                        </InplaceDisplay>
                         <InplaceContent>
                             <InputText
                                 value={surname}
@@ -166,7 +175,12 @@ function Profile() {
                         </InplaceContent>
                     </Inplace>
                     <Inplace closable onClose={editProfile} >
-                        <InplaceDisplay>{name}</InplaceDisplay>
+                        <InplaceDisplay>
+                            <span className="inline-flex align-items-center gap-3">
+                                <span >{name}</span>
+                                <span className="pi pi-pencil"></span>
+                            </span>
+                        </InplaceDisplay>
                         <InplaceContent>
                             <InputText value={name} onChange={(e) => {
                                 setName(e.target.value)
@@ -174,7 +188,12 @@ function Profile() {
                         </InplaceContent>
                     </Inplace>
                     <Inplace closable onClose={editProfile}>
-                        <InplaceDisplay>{patronymic}</InplaceDisplay>
+                        <InplaceDisplay>
+                            <span className="inline-flex align-items-center gap-3">
+                                <span >{patronymic}</span>
+                                <span className="pi pi-pencil"></span>
+                            </span>
+                        </InplaceDisplay>
                         <InplaceContent>
                             <InputText value={patronymic} onChange={(e) => {
                                 setPatronymic(e.target.value)
@@ -183,7 +202,25 @@ function Profile() {
                         </InplaceContent>
                     </Inplace>
                     <Inplace closable onClose={editProfile}>
-                        <InplaceDisplay>{gender}</InplaceDisplay>
+                        <InplaceDisplay>
+                                <span className="inline-flex align-items-center gap-3">
+                                    <span >{date_of_birth}</span>
+                                    <span className="pi pi-pencil"></span>
+                                </span>
+                        </InplaceDisplay>
+                        <InplaceContent>
+                            <InputText value={date_of_birth} onChange={(e) => {
+                                setDate_of_birth(e.target.value)
+                            }} autoFocus />
+                        </InplaceContent>
+                    </Inplace>
+                    <Inplace closable onClose={editProfile}>
+                        <InplaceDisplay>
+                            <span className="inline-flex align-items-center gap-3">
+                                <span >{gender}</span>
+                                <span className="pi pi-pencil"></span>
+                            </span>
+                        </InplaceDisplay>
                         <InplaceContent>
                             <InputText value={gender} onChange={(e) => {
                                 setGender(e.target.value)
@@ -191,7 +228,12 @@ function Profile() {
                         </InplaceContent>
                     </Inplace>
                     <Inplace closable onClose={editProfile}>
-                        <InplaceDisplay>{telephone}</InplaceDisplay>
+                        <InplaceDisplay>
+                            <span className="inline-flex align-items-center gap-3">
+                                <span >{telephone}</span>
+                                <span className="pi pi-pencil"></span>
+                            </span>
+                        </InplaceDisplay>
                             <InplaceContent>
                                 <InputText value={telephone} onChange={(e) => {
                                     setTelephone(e.target.value)
@@ -199,21 +241,19 @@ function Profile() {
                             </InplaceContent>
                     </Inplace>
                     <Inplace closable onClose={editProfile}>
-                        <InplaceDisplay>{email}</InplaceDisplay>
+                        <InplaceDisplay>
+                            <span className="inline-flex align-items-center gap-3">
+                                <span >{email}</span>
+                                <span className="pi pi-pencil"></span>
+                            </span>
+                        </InplaceDisplay>
                             <InplaceContent>
                                 <InputText value={email} onChange={(e) => {
                                     setEmail(e.target.value)
                                 }} autoFocus />
                             </InplaceContent>
                     </Inplace>
-                    <Inplace closable onClose={editProfile}>
-                        <InplaceDisplay>{date_of_birth}</InplaceDisplay>
-                            <InplaceContent>
-                                <InputText value={date_of_birth} onChange={(e) => {
-                                    setDate_of_birth(e.target.value)
-                                }} autoFocus />
-                            </InplaceContent>
-                    </Inplace>
+
                     <Button label="Выйти" severity="warning" outlined onClick={(event) => navigate('/login')}/>
                     <Button label="Удалить профиль" severity="danger" outlined onClick={deleteAccount}/>
                 </div>

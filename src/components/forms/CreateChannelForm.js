@@ -11,7 +11,7 @@ import {Checkbox} from "primereact/checkbox";
 import {useNavigate} from "react-router-dom";
 import HOST from "../../host";
 
-export default function CreateChannelForm({defaultName='', defaultDescription='', defaultIsPublic=true, path=`${HOST}/channel/`, method='POST', buttonTitle='Создать канал'}) {
+export default function CreateChannelForm({defaultName='', defaultDescription='', defaultIsPublic=true, path=`${HOST}/channel/`, method='POST', buttonTitle='Создать сообщество'}) {
     const [isModalActive, setModalActive] = useState(false);
     const toast = useRef(null);
     const navigate = useNavigate()
@@ -31,7 +31,7 @@ export default function CreateChannelForm({defaultName='', defaultDescription=''
             let errors = {};
 
             if (!data.name) {
-                errors.name = 'Введите название канала.';
+                errors.name = 'Введите название сообщества.';
             }
 
             return errors;
@@ -58,7 +58,7 @@ export default function CreateChannelForm({defaultName='', defaultDescription=''
             ).then(response => {
                     if (response.ok) {
                         const data = response.json();
-                        show('success', 'Успешно', 'Канал успешно создан')
+                        show('success', 'Успешно', 'Сообщество успешно создано')
                         setModalActive(false)
                     } else if (response.status === 401) {
                         navigate('/login')
@@ -80,7 +80,7 @@ export default function CreateChannelForm({defaultName='', defaultDescription=''
 
     return (
         <div>
-        <Dialog header="Новый канал" className="card flex justify-content-center shadow-2 border-round" visible={isModalActive} onHide={() => setModalActive(false)} style={{ width: '40%' }}>
+        <Dialog header="Новое сообщество" className="card flex justify-content-center shadow-2 border-round" visible={isModalActive} onHide={() => setModalActive(false)} style={{ width: '40%' }}>
             <form onSubmit={formik.handleSubmit} className="auth flex flex-column gap-4">
                 <div>
                     <span className="p-float-label">
@@ -88,7 +88,7 @@ export default function CreateChannelForm({defaultName='', defaultDescription=''
                                value={formik.values.name}
                                onChange={(e) =>
                                    formik.setFieldValue('name', e.target.value)}/>
-                    <label htmlFor="name">Название канала</label>
+                    <label htmlFor="name">Название сообщества</label>
                 </span>
                     {getFormErrorMessage('name')}
                 </div>
@@ -106,7 +106,7 @@ export default function CreateChannelForm({defaultName='', defaultDescription=''
                             formik.setFieldValue('description', e.target.value);
                         }}
                     />
-                    <label htmlFor="description">Описание канала</label>
+                    <label htmlFor="description">Описание сообщества</label>
                 </span>
                     {getFormErrorMessage('description')}
                 </div>
@@ -122,7 +122,7 @@ export default function CreateChannelForm({defaultName='', defaultDescription=''
                             }
                             checked={formik.values.is_public}
                         />
-                        <label htmlFor="is_public" className="ml-2">Публичный канал (для вступления не требуется подтверждение администратора)</label>
+                        <label htmlFor="is_public" className="ml-2">Публичное сообщество (для вступления не требуется подтверждение администратора)</label>
                     </span>
                     {getFormErrorMessage('is_public')}
                 </div>
