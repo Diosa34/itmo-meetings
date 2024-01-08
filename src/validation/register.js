@@ -1,9 +1,7 @@
+import React from "react";
+
 export default function validate(data, birthDay)  {
         let errors = {};
-
-        if (!data.username) {
-            errors.username = 'Выберите псевдоним';
-        }
 
         if (!data.surname) {
             errors.surname = 'Введите фамилию';
@@ -17,7 +15,7 @@ export default function validate(data, birthDay)  {
             errors.name = 'Имя должно состоять из букв'
         }
 
-        if (!(/^[А-ЯA-Z][а-яa-z]+$/.test(data.patronymic))) {
+        if (!(/^[А-ЯA-Z][а-яa-z]+$/.test(data.patronymic)) && data.patronymic) {
             errors.patronymic = 'Отчество должно состоять из букв'
         }
 
@@ -51,10 +49,18 @@ export default function validate(data, birthDay)  {
             errors.login = 'Длина логина должна быть от 3 до 20 символов';
         }
 
+        const pas = data.password
+
         if (!data.password) {
             errors.password = 'Введите пароль';
         } else if (data.password.length < 8 || data.password.length > 30) {
             errors.password = 'Длина пароля должна быть от 8 до 30 символов';
+        } else if (pas.toLowerCase() === data.password) {
+            errors.password = 'Парооль должен содержать минимум одну букву в верхнем регистре';
+        } else if (pas.toUpperCase() === data.password) {
+            errors.password = 'Парооль должен содержать минимум одну букву в нижнем регистре';
+        } else if (!(/\d+/.test(data.password))) {
+            errors.password = 'Парооль должен содержать минимум одну цифру'
         }
 
         if (!data.password2 || data.password2 !== data.password) {

@@ -15,8 +15,6 @@ import HOST from "../../host";
 function AuthForm() {
     const navigate = useNavigate();
 
-    const [login, setLogin] = useState("");
-    const [password, setPassword] = useState("");
     const [activeIndex, setActiveIndex] = useState(0);
     const items = [
         {label: 'Вход', link: "/login"},
@@ -78,7 +76,6 @@ function AuthForm() {
                     if (response.ok) {
                         const token = await response.json()
                         localStorage.setItem('token', token.access_token)
-                        console.log(localStorage.getItem('token'))
                         navigate('/catalog')
                         showToast(successToast, 'success', 'Пользователь успешно авторизован');
                     } else if (response.status === 422) {
@@ -119,11 +116,10 @@ function AuthForm() {
                             className={classNames({ 'p-invalid': isFormFieldInvalid('login') }, 'widthInput')}
                             onChange={(e) => {
                                 formik.setFieldValue('login', e.target.value);
-                                setLogin(e.target.value)
                             }
                             }
                         />
-                        <label htmlFor="login">Логин</label>
+                        <label className="required" htmlFor="login">Логин</label>
                     </span>
                         {getFormErrorMessage('login')}
                 </div>
@@ -135,12 +131,11 @@ function AuthForm() {
                         className={classNames({ 'p-invalid': isFormFieldInvalid('password') }, 'widthInput')}
                         onChange={(e) => {
                             formik.setFieldValue('password', e.target.value);
-                            setPassword(e.target.value)
                         }}
                         toggleMask
                         feedback={false}
                     />
-                    <label htmlFor="password">Пароль</label>
+                    <label className="required" htmlFor="password">Пароль</label>
                 </span>
                     {getFormErrorMessage('password')}
                 </div>

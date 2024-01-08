@@ -143,14 +143,16 @@ function Profile() {
                 <h1 className="title">Мой профиль</h1>
                 <div className="left">
                     <Avatar className={'avatar'} icon="pi pi-user" size="xlarge" shape="circle" />
-                    <Inplace closable onClose={editProfile}>
-                        <InplaceDisplay>{username}</InplaceDisplay>
-                        <InplaceContent>
-                            <InputText value={username} onChange={(e) => {
-                                setUsername(e.target.value)
-                            }} autoFocus />
-                        </InplaceContent>
-                    </Inplace>
+                    <div className="card">
+                        <Inplace closable onClose={editProfile}>
+                            <InplaceDisplay>{username}</InplaceDisplay>
+                            <InplaceContent>
+                                <InputText value={username} onChange={(e) => {
+                                    setUsername(e.target.value)
+                                }} autoFocus />
+                            </InplaceContent>
+                        </Inplace>
+                    </div>
                     <Inplace closable className="child"  onClose={editProfile}>
                         <InplaceDisplay>{surname}</InplaceDisplay>
                         <InplaceContent>
@@ -163,7 +165,7 @@ function Profile() {
                             />
                         </InplaceContent>
                     </Inplace>
-                    <Inplace closable onClose={editProfile}>
+                    <Inplace closable onClose={editProfile} >
                         <InplaceDisplay>{name}</InplaceDisplay>
                         <InplaceContent>
                             <InputText value={name} onChange={(e) => {

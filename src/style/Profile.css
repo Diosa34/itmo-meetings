@@ -3,7 +3,7 @@
     display: grid;
     grid-template-areas:
     "A A A"
-    "B C D";
+    "B B C";
     justify-content: space-around;
     padding-top: 2rem;
 }

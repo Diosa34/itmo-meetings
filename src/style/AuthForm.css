@@ -3,20 +3,27 @@
     display: grid;
 }
 
+label.required:after {
+    content: " *";
+    color: red;
+}
+
 .auth-card {
     margin-bottom: 5rem;
     width: 25rem;
     margin-top: 5%;
     margin-left: auto;
     margin-right: auto;
-    background-image: url("C:\Users\Diosa\IdeaProjects\itmo-meetings\src\resources\Cups.png");
-    background-position: center;
 }
 
 span, button {
     /*margin-top: 1.4rem;*/
 }
 
-input, .p-calendar{
+input {
     min-width: 86%;
+}
+
+.p-calendar {
+    min-height: 50%;
 }

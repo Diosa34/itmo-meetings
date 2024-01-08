@@ -19,6 +19,7 @@ export default function AddEvent() {
     const [isModalActive, setModalActive] = useState(false);
     const [myChannels, setMyChannels] = useState();
     const [selectedChannel, setSelectedChannel] = useState();
+    const [selectedUnit, setSelectedUnit] = useState('мин.');
     const [error, setError] = useState({
         code: 500,
         title: 'Каналы пользователя не были загружены',
@@ -35,10 +36,10 @@ export default function AddEvent() {
         initialValues: {
             title: "",
             description: "",
-            start_datetime: "",
-            duration_in_minutes: 0, // просто число
+            start_datetime: new Date(),
+            duration_in_minutes: null, // просто число
             address: "",
-            capacity: 500, // просто число
+            capacity: 4, // просто число
             price: 0,
             minimum_age: 0,
             maximum_age: 150,
@@ -55,24 +56,33 @@ export default function AddEvent() {
 
             if (!data.start_datetime) {
                 errors.start_datetime = 'Выберите дату и время начала мероприятия.';
-            } else if (data.start_datetime.getTime() < new Date().getTime()) {
-                errors.start_datetime = 'Некорректная дата, этот день уже в прошлом.';
+            } else if (data.start_datetime.getTime() <= new Date().getTime()) {
+                errors.start_datetime = 'Некорректная дата, слишком позднее начало.';
             }
 
             if (!data.address) {
                 errors.address = 'Выберите место проведения мероприятия.';
             }
 
-            if (data.duration_in_minutes <= 0) {
-                errors.duration_in_minutes = 'Введите предполагаемую длительность.';
+            if (data.duration_in_minutes <= 0 && data.duration_in_minutes) {
+                errors.duration_in_minutes = 'Длительность мероприятия должна быть больше 0.';
             }
 
-            if (!data.capacity) {
+            if (!data.capacity || data.capacity <= 0) {
                 errors.capacity = 'Максиимальное количество участников должно быть больше 0.';
+            }
+
+            if (!(/\d+/.test(data.price))) {
+                errors.price = 'Цена должна быть числом.';
             }
 
             if (!data.channel_id) {
                 errors.channel_id = 'Выберите автора.';
+            }
+
+            if (data.minimum_age > data.maximum_age || !data.minimum_age || !data.maximum_age) {
+                errors.minimum_age = 'Максимальный возраст должен быть больше минимального'
+                errors.maximum_age = 'Максимальный возраст должен быть больше минимального'
             }
 
             return errors;
@@ -204,6 +214,16 @@ export default function AddEvent() {
         toast.current.show({severity:'error', summary: error.title, detail: error.message, life: 3000});
     }
 
+    const calculateDuration = (value) => {
+        if (selectedUnit === 'мин.') {
+            return value
+        } else if (selectedUnit === 'час.') {
+            return value * 60
+        } else if (selectedUnit === 'дн.') {
+            return value * 60 * 24
+        }
+    }
+
     return (
         <div>
             <Dialog className="auth-card" header="Новое мероприятие" visible={isModalActive} onHide={() => setModalActive(false)} style={{ width: '50vw' }} >
@@ -219,7 +239,7 @@ export default function AddEvent() {
                                 }
                                 }
                             />
-                            <label htmlFor="title">Название мероприятия</label>
+                            <label className="required" htmlFor="title">Название мероприятия</label>
                         </span>
                         {getFormErrorMessage('title')}
                     </div>
@@ -233,6 +253,7 @@ export default function AddEvent() {
                                     formik.setFieldValue('description', e.target.value);
                                     }
                                 }
+                                rows={5} cols={40}
                             />
                             <label htmlFor="description">Описание мероприятия</label>
                         </span>
@@ -241,7 +262,9 @@ export default function AddEvent() {
                     <div>
                         <span className="p-float-label">
                             <Calendar
-                                showTime hourFormat="24"
+                                showIcon
+                                showTime
+                                hourFormat="24"
                                 inputid="start_datetime"
                                 value={formik.values.start_datetime}
                                 className={classNames({ 'p-invalid': isFormFieldInvalid('start_datetime') })}
@@ -249,25 +272,38 @@ export default function AddEvent() {
                                     formik.setFieldValue('start_datetime', e.target.value);
                                     }
                                 }
+                                dateFormat="dd.mm.yy"
+                                showOnFocus={false}
                             />
-                            <label htmlFor="start_datetime">Начало мероприятия</label>
+                            <label className="required" htmlFor="start_datetime">Начало мероприятия</label>
                         </span>
                         {getFormErrorMessage('start_datetime')}
                     </div>
-                    <div>
-                        <span className="p-float-label">
+                    <div className="flex ">
+                        <div className="flex-initial flex align-items-center justify-content-center border-round">
+                            <span className="p-float-label">
                             <InputText
                                 inputid="duration_in_minutes"
                                 value={formik.values.duration_in_minutes}
                                 className={classNames({ 'p-invalid': isFormFieldInvalid('duration_in_minutes') })}
                                 onChange={(e) => {
-                                    formik.setFieldValue('duration_in_minutes', e.target.value);
+                                    formik.setFieldValue('duration_in_minutes', calculateDuration(e.target.value));
                                 }
                                 }
                             />
-                            <label htmlFor="duration_in_minutes">Длительность мероприятия (в мин)</label>
-                        </span>
-                        {getFormErrorMessage('duration_in_minutes')}
+                            <label htmlFor="duration_in_minutes">Длительность мероприятия</label>
+                            </span>
+                                {getFormErrorMessage('duration_in_minutes')}
+                        </div>
+                        <div className="flex-initial flex align-items-center justify-content-center border-round">
+                            <Dropdown
+                                value={selectedUnit}
+                                options={['час.', 'мин.', 'дн.']}
+                                onChange={(e) => {
+                                    setSelectedUnit(e.value)
+                                }}
+                            />
+                        </div>
                     </div>
                     <div>
                         <span className="p-float-label">
@@ -280,7 +316,7 @@ export default function AddEvent() {
                                 }
                                 }
                             />
-                            <label htmlFor="address">Адрес проведения</label>
+                            <label className="required" htmlFor="address">Адрес проведения</label>
                         </span>
                         {getFormErrorMessage('address')}
                     </div>
@@ -295,7 +331,7 @@ export default function AddEvent() {
                                 }
                                 }
                             />
-                            <label htmlFor="capacity">Максимальное количество участников (если есть)</label>
+                            <label htmlFor="capacity">Максимальное количество участников</label>
                         </span>
                         {getFormErrorMessage('capacity')}
                     </div>
@@ -310,7 +346,7 @@ export default function AddEvent() {
                                 }
                                 }
                             />
-                            <label htmlFor="price">Цена</label>
+                            <label htmlFor="price">Цена (в рублях)</label>
                         </span>
                         {getFormErrorMessage('price')}
                     </div>
@@ -325,7 +361,7 @@ export default function AddEvent() {
                                 }
                                 }
                             />
-                            <label htmlFor="minimum_age">Минимальный возраст участников (если есть)</label>
+                            <label htmlFor="minimum_age">Минимальный возраст участников</label>
                         </span>
                         {getFormErrorMessage('minimum_age')}
                     </div>
@@ -340,7 +376,7 @@ export default function AddEvent() {
                                 }
                                 }
                             />
-                            <label htmlFor="maximum_age">Максимальный возраст участников (если есть)</label>
+                            <label htmlFor="maximum_age">Максимальный возраст участников</label>
                         </span>
                         {getFormErrorMessage('maximum_age')}
                     </div>
@@ -379,7 +415,7 @@ export default function AddEvent() {
                     <div>
                         <span className="p-float-label">
                             <Dropdown
-                                style={{ minWidth: '40vw' }}
+                                style={{ minWidth: '40vw', minHeight: '4vw'}}
                                 inputId="Канал"
                                 optionLabel="name"
                                 value={selectedChannel}
@@ -390,7 +426,7 @@ export default function AddEvent() {
                                 }}
                                 // placeholder="Выберите от чьего имени создадите мероприятие"
                             />
-                            <label htmlFor="Канал">Выберите от чьего имени создадите мероприятие</label>
+                            <label className="required" htmlFor="Канал">Выберите, создадите мероприятие от своего имени или одного из каналов, вдаельцем котрого вы являетесь</label>
                         </span>
                         {getFormErrorMessage('channel_id')}
                     </div>

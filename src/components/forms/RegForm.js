@@ -20,19 +20,8 @@ import HOST from "../../host";
 
 function RegForm() {
 
-    const [isu: number, setIsu] = useState();
-    const [surname, setSurname] = useState("");
-    const [name, setName] = useState("");
-    const [patronymic, setPatronymic] = useState("");
-    const [birthDay: Date, setBirthDay] = useState(new Date());
+    const [birthDay: Date, setBirthDay] = useState();
     const [gender, setGender] = useState();
-    const [telephone, setTelephone] = useState("");
-    const [email, setEmail] = useState("");
-    const [login, setLogin] = useState("");
-    const [password, setPassword] = useState("");
-    const [password2, setPassword2] = useState("");
-    const [response, setResponse] = useState("");
-
 
     const [activeIndex, setActiveIndex] = useState(1);
     const items = [
@@ -76,7 +65,6 @@ function RegForm() {
 
     const formik = useFormik({
         initialValues: {
-            username: '',
             surname: '',
             name: '',
             patronymic: null,
@@ -95,7 +83,7 @@ function RegForm() {
                 'POST',
                 'application/json',
                 {
-                    username: formik.values.username,
+                    username: formik.values.login,
                     telephone: formik.values.telephone,
                     email: formik.values.email,
                     firstname: formik.values.name,
@@ -108,9 +96,7 @@ function RegForm() {
                 }
             ).then(response => {
                     if (response.ok) {
-                        setResponse(response.json());
                         navigate('/login')
-                        // data &&
                         showToast(successToast, 'success', 'Пользователь успешно зарегистрирован');
                     } else if (response.status === 422) {
                         showToast(failToast, 'error', 'Неверные данные', 'Такой пользователь уже существует или введены некорректные данные');
@@ -143,30 +129,14 @@ function RegForm() {
                 <div>
                     <span className="p-float-label">
                     <InputText
-                        inputid="username"
-                        value={formik.values.username}
-                        className={classNames({ 'p-invalid': isFormFieldInvalid('username') })}
-                        onChange={(e) => {
-                            formik.setFieldValue('username', e.target.value);
-                            setIsu(e.target.value)
-                        }}
-                    />
-                    <label htmlFor="username">Ник</label>
-                    </span>
-                        {getFormErrorMessage('username')}
-                </div>
-                <div>
-                    <span className="p-float-label">
-                    <InputText
                         inputid="surname"
                         value={formik.values.surname}
                         className={classNames({ 'p-invalid': isFormFieldInvalid('surname') })}
                         onChange={(e) => {
-                            formik.setFieldValue('surname', e.target.value);
-                            setSurname(e.target.value)
+                            formik.setFieldValue('surname', e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1).toLowerCase());
                         }}
                     />
-                    <label htmlFor="surname">Фамилия</label>
+                    <label className="required" htmlFor="surname">Фамилия</label>
                     </span>
                         {getFormErrorMessage('surname')}
                 </div>
@@ -177,11 +147,10 @@ function RegForm() {
                         value={formik.values.name}
                         className={classNames({ 'p-invalid': isFormFieldInvalid('name') })}
                         onChange={(e) => {
-                            formik.setFieldValue('name', e.target.value);
-                            setName(e.target.value)
+                            formik.setFieldValue('name', formik.values.name.charAt(0).toUpperCase() + formik.values.name.slice(1).toLowerCase());
                         }}
                     />
-                    <label htmlFor="name">Имя</label>
+                    <label className="required" htmlFor="name">Имя</label>
                     </span>
                         {getFormErrorMessage('name')}
                 </div>
@@ -192,8 +161,7 @@ function RegForm() {
                         value={formik.values.patronymic}
                         className={classNames({ 'p-invalid': isFormFieldInvalid('patronymic') })}
                         onChange={(e) => {
-                            formik.setFieldValue('patronymic', e.target.value);
-                            setPatronymic(e.target.value)
+                            formik.setFieldValue('patronymic', e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1).toLowerCase());
                         }}
                     />
                     <label htmlFor="patronymic">Отчество (при наличии)</label>
@@ -202,41 +170,44 @@ function RegForm() {
                 </div>
                 <div>
                     <span className="flex">
-
-                    {radioBtns.map((btn, i) => {
-                        return (
-                            <div key={i} className="flex align-items-center mr-3">
-                                <RadioButton
-                                    {...btn}
-                                    onChange={(e) => {
-                                        let actualValue = (e.value === 'Муж') ? 'male' : 'female';
-                                        formik.setFieldValue('gender', actualValue);
-                                        setGender(actualValue)
-                                    }}
-                                />
-                                <label htmlFor={btn.inputId} className="ml-1">
-                                    {btn.value}
-                                </label>
-                            </div>
-                        );
-                    })}
-                </span>
+                        {radioBtns.map((btn, i) => {
+                            return (
+                                <div key={i} className="flex align-items-center mr-3">
+                                    <RadioButton
+                                        {...btn}
+                                        checked={formik.values.gender === btn.inputId}
+                                        onChange={(e) => {
+                                            let actualValue = (e.value === 'Муж') ? 'male' : 'female';
+                                            formik.setFieldValue('gender', actualValue);
+                                            setGender(actualValue)
+                                        }}
+                                    />
+                                    <label htmlFor={btn.inputId} className="ml-1">
+                                        {btn.value}
+                                    </label>
+                                </div>
+                            );
+                        })}
+                    </span>
                     {getFormErrorMessage('gender')}
                 </div>
                 <div>
-                    <Calendar
-                        yearRange="1900:2007"
-                        inputid="birth_date"
-                        value={birthDay}
-                        className={classNames({ 'p-invalid': isFormFieldInvalid('birthDay') }, 'minWidth')}
-                        onChange={(e) => {
-                            setBirthDay(e.target.value)
-                            let actualBirthDay = e.target.value.toISOString().slice(0, 10);
-                            formik.setFieldValue('birthDay', actualBirthDay);
-                        }}
-                        dateFormat="yy.mm.dd"
-                        placeholder={"Дата рождения"}
-                    />
+                    <span className="p-float-label">
+                        <Calendar
+                            yearRange="1900:2007"
+                            inputid="birth_date"
+                            value={birthDay}
+                            className={classNames({ 'p-invalid': isFormFieldInvalid('birthDay') }, 'minWidth')}
+                            onChange={(e) => {
+                                setBirthDay(e.target.value)
+                                let actualBirthDay = e.target.value.toISOString().slice(0, 10);
+                                formik.setFieldValue('birthDay', actualBirthDay);
+                            }}
+                            dateFormat="dd.mm.yy"
+                            placeholder={"чч.мм.гггг"}
+                        />
+                        <label  className="required" htmlFor="birth_date">Дата рождения</label>
+                    </span>
                     {getFormErrorMessage('birthDay')}
                 </div>
                 <div>
@@ -248,11 +219,10 @@ function RegForm() {
                         onChange={(e) => {
                             let actualPhone = e.target.value.replace(/^8/, "+7")
                             formik.setFieldValue('telephone', actualPhone);
-                            setTelephone(actualPhone)
                         }}
                         mask="8 (999) 999-9999"
                     />
-                    <label htmlFor="telephone">Телефон</label>
+                    <label  className="required" htmlFor="telephone">Телефон</label>
                 </span>
                     {getFormErrorMessage('telephone')}
                 </div>
@@ -264,11 +234,10 @@ function RegForm() {
                         className={classNames({ 'p-invalid': isFormFieldInvalid('email') })}
                         onChange={(e) => {
                             formik.setFieldValue('email', e.target.value);
-                            setEmail(e.target.value)
                         }}
                         keyfilter="email"
                     />
-                    <label htmlFor="email">Электронная почта</label>
+                    <label className="required" htmlFor="email">Электронная почта</label>
                 </span>
                     {getFormErrorMessage('email')}
                 </div>
@@ -280,10 +249,9 @@ function RegForm() {
                         className={classNames({ 'p-invalid': isFormFieldInvalid('login') })}
                         onChange={(e) => {
                             formik.setFieldValue('login', e.target.value);
-                            setLogin(e.target.value)
                         }}
                     />
-                    <label htmlFor="login">Логин</label>
+                    <label className="required" htmlFor="login">Логин</label>
                 </span>
                     {getFormErrorMessage('login')}
                 </div>
@@ -295,14 +263,13 @@ function RegForm() {
                         className={classNames({ 'p-invalid': isFormFieldInvalid('password') })}
                         onChange={(e) => {
                             formik.setFieldValue('password', e.target.value);
-                            setPassword(e.target.value)
                         }}
                         header={header}
                         footer={footer}
                         toggleMask
                         promptLabel="Введите пароль" weakLabel="Слабый" mediumLabel="Средний" strongLabel="Надёжный"
                     />
-                    <label htmlFor="password">Пароль</label>
+                    <label  className="required" htmlFor="password">Пароль</label>
                 </span>
                     {getFormErrorMessage('password')}
                 </div>
@@ -314,11 +281,10 @@ function RegForm() {
                         className={classNames({ 'p-invalid': isFormFieldInvalid('password2') })}
                         onChange={(e) => {
                             formik.setFieldValue('password2', e.target.value);
-                            setPassword2(e.target.value)
                         }}
                         feedback={false}
                         toggleMask/>
-                    <label htmlFor="password2">Пароль ещё раз</label>
+                    <label className="required" htmlFor="password2">Пароль ещё раз</label>
                 </span>
                     {getFormErrorMessage('password2')}
                 </div>

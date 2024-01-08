@@ -313,9 +313,9 @@ export default function Channel() {
                             <div className="box-1">
                                 <h1>{channel.name}</h1>
                             </div>
-                            <div className="box-2">
-                                <AddEvent />
-                            </div>
+                            {/*<div className="box-2">*/}
+                            {/*    <AddEvent />*/}
+                            {/*</div>*/}
                         </div>
                         <p className="text-xl">{channel.description}</p>
                         <EventsContainer events={events}/>
