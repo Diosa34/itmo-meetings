@@ -22,7 +22,7 @@ function FeedbackForm({setModalActive, isModalActive, isRatingExists, actualRati
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': HOST,
                     'Content-type': 'application/json',
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
@@ -54,7 +54,7 @@ function FeedbackForm({setModalActive, isModalActive, isRatingExists, actualRati
                 method: 'PUT',
                 headers: {
                     'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': HOST,
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
                 },
@@ -84,7 +84,7 @@ function FeedbackForm({setModalActive, isModalActive, isRatingExists, actualRati
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': HOST,
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
                 },

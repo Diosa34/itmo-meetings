@@ -1,3 +1,5 @@
+import HOST from "../host";
+
 export default async function request(url, method, content_type, body) {
     return await fetch(url,
         {
@@ -5,7 +7,7 @@ export default async function request(url, method, content_type, body) {
             headers: {
                 'Accept': 'application/json',
                 'Content-type': content_type,
-                'Access-Control-Allow-Origin': 'http://localhost:3000',
+                'Access-Control-Allow-Origin': HOST,
                 'Access-Control-Allow-Credentials': 'true'
             },
             body: JSON.stringify(body)

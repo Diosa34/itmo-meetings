@@ -105,7 +105,11 @@ export default function EventsContainer({events}) {
         <div className="card">
             {!(typeof events === "undefined") ?
             <DataView
-                value={events.filter(elem => (elem.title.toLowerCase()).includes(globalFilterValue.toLowerCase()) || (elem.description.toLowerCase()).includes(globalFilterValue.toLowerCase()) || (elem.address.toLowerCase()).includes(globalFilterValue.toLowerCase()))}
+                value={events.filter(elem =>
+                    (elem.title.toLowerCase()).includes(globalFilterValue.toLowerCase()) ||
+                    (elem.description.toLowerCase()).includes(globalFilterValue.toLowerCase()) ||
+                    (elem.address.toLowerCase()).includes(globalFilterValue.toLowerCase()))
+                }
                 itemTemplate={itemTemplate} layout={layout} header={header()} />
             : null}
         </div>

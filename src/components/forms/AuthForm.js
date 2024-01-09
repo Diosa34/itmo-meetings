@@ -67,7 +67,7 @@ function AuthForm() {
                     headers: {
                         'Accept': 'application/json',
                         'Content-type': 'application/x-www-form-urlencoded',
-                        'Access-Control-Allow-Origin': 'http://localhost:3000',
+                        'Access-Control-Allow-Origin': HOST,
                         'Access-Control-Allow-Credentials': 'true',
                         'WWW-Authenticate': 'Bearer'
                     },

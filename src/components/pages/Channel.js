@@ -11,6 +11,7 @@ import WaitModal from "../forms/waitModal";
 import CreateChannelForm from "../forms/CreateChannelForm";
 import MemberRoleForm from "../forms/MemberRoleForm";
 import HOST from "../../host";
+import ChannelMembers from "../ChannelMembers";
 
 export default function Channel() {
     const params = useParams();
@@ -19,6 +20,7 @@ export default function Channel() {
     const [users, setUsers] = useState([]);
     const [me, setMe] = useState()
     const [channel, setChannel] = useState();
+    const [myChannels, setMyChannels] = useState();
     const [events, setEvents] = useState();
     const [requestError, setRequestError] = useState()
     const [visibleRight, setVisibleRight] = useState(false);
@@ -31,7 +33,7 @@ export default function Channel() {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': HOST,
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
                 }
@@ -64,14 +66,14 @@ export default function Channel() {
             }
         )
     }, [navigate, params.id, token]);
-
+    // Зачем юзеры, если есть участники канала? Ответ: потому что в участнике канала нет данных пользователя
     function getUser(id) {
         fetch(`${HOST}/user/${id}/`,
             {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': HOST,
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
                 }
@@ -99,7 +101,7 @@ export default function Channel() {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': HOST,
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
                 }
@@ -134,7 +136,7 @@ export default function Channel() {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': HOST,
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
                 }
@@ -168,7 +170,7 @@ export default function Channel() {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': HOST,
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
                 }
@@ -195,6 +197,40 @@ export default function Channel() {
                 }
             }
         )
+
+        fetch(`${HOST}/user/me/channels`,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': HOST,
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                }
+            }
+        ).then(response => {
+                if (response.ok) {
+                    const data = response.json();
+                    data.then(value => {
+                        setMyChannels(value)
+                    });
+                } else if (response.status === 401) {
+                    navigate('/login')
+                    // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
+                } else if (response.status === 422) {
+                    setRequestError({code: response.status,
+                        title: 'Список моих сообществ не был загружен',
+                        message: 'Сломанный запрос'})
+                    // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
+                } else if (response.status === 500) {
+                    setRequestError({code: response.status,
+                        title: 'Список моих сообществ не был загружен',
+                        message: 'Ошибка сервера, не принимайте на свой счёт'})
+                    // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+                }
+            }
+        )
+
     }, [navigate, params.id, token]);
 
     const failToast = useRef();
@@ -206,7 +242,7 @@ export default function Channel() {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': HOST,
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
                 }
@@ -238,7 +274,7 @@ export default function Channel() {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': HOST,
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
                 }
@@ -270,7 +306,7 @@ export default function Channel() {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': HOST,
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
                 },
@@ -313,15 +349,16 @@ export default function Channel() {
                             <div className="box-1">
                                 <h1>{channel.name}</h1>
                             </div>
-                            {/*<div className="box-2">*/}
-                            {/*    <AddEvent />*/}
-                            {/*</div>*/}
+                            <div className="box-2">
+                                <AddEvent />
+                            </div>
                         </div>
                         <p className="text-xl">{channel.description}</p>
                         <EventsContainer events={events}/>
                     </div>
                             {!(typeof members === "undefined") ?
                         <div className="p-5 right-area">
+                            <ChannelMembers members={members}/>
                             <div className="flex gap-2 justify-content-center">
                                 <Button icon="pi pi-cog" onClick={() => setVisibleRight(true)} />
                             </div>

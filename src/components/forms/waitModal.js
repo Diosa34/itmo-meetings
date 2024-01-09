@@ -21,7 +21,7 @@ export default function WaitModal({setModalActive, isModalActive, users, channel
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                    'Access-Control-Allow-Origin': HOST,
                     'Access-Control-Allow-Credentials': 'true',
                     'Authorization': token != null ? token : "",
                 }
