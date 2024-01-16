@@ -160,7 +160,7 @@ export default function AddEvent() {
 
     function getMyChannels() {
         const token = 'Bearer ' + localStorage.getItem('token')
-        fetch(`${HOST}/user/me/channels`,
+        fetch(`${HOST}/user/me/channels/`,
             {
                 method: 'GET',
                 headers: {

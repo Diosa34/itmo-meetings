@@ -302,7 +302,7 @@ export default function Channel() {
             }
         )
 
-        fetch(`${HOST}/user/me/channels`,
+        fetch(`${HOST}/user/me/channels/`,
             {
                 method: 'GET',
                 headers: {
@@ -339,7 +339,7 @@ export default function Channel() {
     const failToast = useRef();
 
     const deleteChannel = () => {
-        fetch(`${HOST}/channel/${params.id}`,
+        fetch(`${HOST}/channel/${params.id}/`,
             {
                 method: 'DELETE',
                 headers: {
