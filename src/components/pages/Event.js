@@ -50,6 +50,7 @@ function Event() {
                     const data = response.json();
                     data.then(value => {
                         setChannel(value)
+                        console.log(value.is_personal)
                     });
                 } else if (response.status === 401) {
                     navigate('/login')
@@ -223,7 +224,7 @@ function Event() {
                         <label className="first-col">Только для студентов ИТМО: {event.only_for_itmo_students ? "да." : "нет."}</label>
                         <label className="first-col">Только для граждан РФ: {event.only_for_russians ? "да." : "нет."}</label>
                         {getChannel}
-                        <Button visible={!channel.is_personal} label="Перейти в сообщество" icon="pi pi-arrow-right" text raised size="small" iconPos="right" onClick={(e) => {
+                        <Button visible={!channel.is_personal} label="Посмотреть организатора" icon="pi pi-arrow-right" text raised size="small" iconPos="right" onClick={(e) => {
                             navigate(`/channels/${event.channel_id}`)
                         }}/>
                     </div>

@@ -7,12 +7,10 @@ import {Dialog} from "primereact/dialog";
 import {useNavigate} from "react-router-dom";
 import {Dropdown} from "primereact/dropdown";
 import HOST from "../../host";
+import {InputText} from "primereact/inputtext";
 
-export default function MemberRoleForm({channel_id, my_id, members, users}) {
+export default function MemberRoleForm({channel_id, member}) {
     const [isModalActive, setModalActive] = useState(false);
-    // const [members, setMembers] = useState();
-    // const [users, setUsers] = useState();
-    const [selectedUser, setSelectedUser] = useState();
     const [roles, setRoles] = useState([
         {role: 'OWNER', translation: 'Владелец'},
         {role: 'ADMIN', translation: 'Менеджер'},
@@ -30,15 +28,10 @@ export default function MemberRoleForm({channel_id, my_id, members, users}) {
 
     const formik = useFormik({
         initialValues: {
-            username: '',
             role: '',
         },
         validate: (data) => {
             let errors = {};
-
-            if (!data.username) {
-                errors.username = 'Выберите участника.';
-            }
 
             if (!data.role) {
                 errors.role = 'Выберите роль.';
@@ -47,7 +40,7 @@ export default function MemberRoleForm({channel_id, my_id, members, users}) {
             return errors;
         },
         onSubmit: (data) => {
-            fetch(`${HOST}/channel/${channel_id}/member/${selectedUser.id}/role/`,
+            fetch(`${HOST}/channel/${channel_id}/member/${member.id}/role/`,
                 {
                     method: 'PATCH',
                     headers: {
@@ -59,16 +52,14 @@ export default function MemberRoleForm({channel_id, my_id, members, users}) {
                     },
                     body: JSON.stringify(
                         {
-                            name: formik.values.name,
-                            description: formik.values.description,
-                            is_public: formik.values.is_public,
+                            permissions: formik.values.role,
                         }
                     )
                 }
             ).then(response => {
                     if (response.ok) {
                         const data = response.json();
-                        show('success', 'Успешно', `Роль пользователя ${selectedUser.username} изменена`)
+                        show('success', 'Успешно', `Роль пользователя ${member.username} изменена на ${selectedRole.translation}`)
                         setModalActive(false)
                     } else if (response.status === 401) {
                         navigate('/login')
@@ -91,21 +82,11 @@ export default function MemberRoleForm({channel_id, my_id, members, users}) {
     return (
         <div>
             <Dialog header="Изменить роль" className="card flex justify-content-center shadow-2 border-round" visible={isModalActive} onHide={() => setModalActive(false)} style={{ width: '40%' }}>
-                <form onSubmit={formik.handleSubmit} className="auth flex flex-column">
+                <form onSubmit={formik.handleSubmit} className="auth flex flex-column gap-4">
                     <div>
                         <span className="p-float-label">
-                            <Dropdown
-                                style={{ minWidth: '37vw' }}
-                                inputId="Участник"
-                                optionLabel="username"
-                                value={selectedUser}
-                                options={users}
-                                onChange={(e) => {
-                                    setSelectedUser(e.value)
-                                    formik.setFieldValue('username', e.value.username)
-                                }}
-                            />
-                            <label htmlFor="Участник">Выберите участника, роль которого хотите изменить</label>
+                            <InputText value={member.username + " (" + member.surname + " " + member.firstname + ")"} />
+                            <label htmlFor="Участник">Участник, роль которого хотите изменить</label>
                         </span>
                         {getFormErrorMessage('username')}
                     </div>
@@ -129,7 +110,7 @@ export default function MemberRoleForm({channel_id, my_id, members, users}) {
                     <Button className={'footer'} label='Изменить' type="submit" icon="pi pi-check" />
                 </form>
             </Dialog>
-            <Button label='Изменить роль участника' onClick={() => setModalActive(true)} icon="pi pi-pencil" iconPos="right"  outlined  />
+            <Button text onClick={() => setModalActive(true)} icon="pi pi-pencil" iconPos="right" />
             <Toast ref={toast} />
         </div>
     )

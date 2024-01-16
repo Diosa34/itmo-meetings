@@ -2,7 +2,7 @@
     display: grid;
     /*align-items: start;*/
     grid-template-areas:
-    "B B B B B B B B A";
+    "B B B B B C C C A";
 }
 
 .left-area {
@@ -12,4 +12,8 @@
 .right-area {
     grid-area: A;
 
+}
+
+.middle-area {
+    grid-area: C;
 }

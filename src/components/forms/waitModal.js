@@ -9,7 +9,7 @@ import {useNavigate} from "react-router-dom";
 import HOST from "../../host";
 
 export default function WaitModal({setModalActive, isModalActive, users, channel_id}) {
-    const [selectedMembers, setSelectedMembers] = useState([]);
+    const [selectedMembers: [], setSelectedMembers] = useState([]);
     const [rowClick, setRowClick] = useState(true);
     const token = 'Bearer ' + localStorage.getItem('token')
     const navigate = useNavigate()
@@ -42,7 +42,7 @@ export default function WaitModal({setModalActive, isModalActive, users, channel
 
     const footerContent = (
         <div>
-            <Button label="Принять" type="submit" text icon="pi pi-check" onClick={selectedMembers.forEach((elem) => confirm(elem.user_id))}/>
+            <Button label="Принять" type="submit" text icon="pi pi-check" onSubmit={selectedMembers.forEach((elem) => confirm(elem.user_id))}/>
         </div>
     );
 

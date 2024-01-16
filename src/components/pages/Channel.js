@@ -16,12 +16,27 @@ import ChannelMembers from "../ChannelMembers";
 export default function Channel() {
     const params = useParams();
     const navigate = useNavigate();
-    const [members, setMembers] = useState();
-    const [users, setUsers] = useState([]);
+
+    const [owner, setOwner] = useState();
+    const [owner_id, setOwner_id] = useState();
+    const [admin, setAdmin] = useState();
+    const [admin_id, setAdmin_id] = useState();
+    const [editor, setEditor] = useState();
+    const [editor_id, setEditor_id] = useState();
+    const [member, setMember] = useState();
+    const [member_id, setMember_id] = useState();
+    const [blocked, setBlocked] = useState();
+    const [blocked_id, setBlocked_id] = useState();
+    const [users_id, setUsers_id] = useState([])
+    const [users, setUsers] = useState();
+
     const [me, setMe] = useState()
+
     const [channel, setChannel] = useState();
     const [myChannels, setMyChannels] = useState();
+
     const [events, setEvents] = useState();
+
     const [requestError, setRequestError] = useState()
     const [visibleRight, setVisibleRight] = useState(false);
     const [waitModal, setWaitModal] = useState(false)
@@ -66,9 +81,9 @@ export default function Channel() {
             }
         )
     }, [navigate, params.id, token]);
-    // Зачем юзеры, если есть участники канала? Ответ: потому что в участнике канала нет данных пользователя
-    function getUser(id) {
-        fetch(`${HOST}/user/${id}/`,
+
+    useEffect(() => {
+        fetch(`${HOST}/user/list/`,
             {
                 method: 'GET',
                 headers: {
@@ -82,18 +97,26 @@ export default function Channel() {
                 if (response.ok) {
                     const data = response.json();
                     data.then(value => {
-                            const newUser = [value]
-                            if (!users.includes(value)) {
-                                setUsers([...users, ...newUser])
-                            }
-                        }
-                    );
+                        setUsers(value)
+                        // setUsers_members(value.filter((elem) => users_id.includes(elem.id)))
+                    });
                 } else if (response.status === 401) {
                     navigate('/login')
+                    // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
+                } else if (response.status === 422) {
+                    setRequestError({code: response.status,
+                        title: 'Список мероприятий сообщества не был загружен',
+                        message: 'Сломанный запрос'})
+                    // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
+                } else if (response.status === 500) {
+                    setRequestError({code: response.status,
+                        title: 'Список мероприятий сообщества не был загружен',
+                        message: 'Ошибка сервера, не принимайте на свой счёт'})
+                    // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
                 }
             }
         )
-    }
+    }, [navigate, token]);
 
     useEffect(() => {
         fetch(`${HOST}/meeting/list/`,
@@ -131,7 +154,7 @@ export default function Channel() {
             }
         )
 
-        fetch(`${HOST}/channel/${params.id}/member/list/`,
+        fetch(`${HOST}/channel/${params.id}/member/list/?roles=OWNER`,
             {
                 method: 'GET',
                 headers: {
@@ -145,22 +168,103 @@ export default function Channel() {
                 if (response.ok) {
                     const data = response.json();
                     data.then(value => {
-                        setMembers(value)
-                        value.forEach((elem) => getUser(elem.user_id))
+                        let ids = []
+                        value.forEach((elem) => ids[ids.length] = elem.user_id)
+                        setOwner_id(ids)
+                        setOwner(value)
                     });
-                } else if (response.status === 401) {
-                    navigate('/login')
-                    // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
-                } else if (response.status === 422) {
-                    setRequestError({code: response.status,
-                        title: 'Список мероприятий сообщества не был загружен',
-                        message: 'Сломанный запрос'})
-                    // showToast(cardToast, 'error', 'Страница недоступна', 'Сломанный запрос');
-                } else if (response.status === 500) {
-                    setRequestError({code: response.status,
-                        title: 'Список мероприятий сообщества не был загружен',
-                        message: 'Ошибка сервера, не принимайте на свой счёт'})
-                    // showToast(cardToast, 'error', 'Ошибка', 'Ошибка сервера, не принимайте на свой счёт');
+                }
+            }
+        )
+
+        fetch(`${HOST}/channel/${params.id}/member/list/?roles=ADMIN`,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': HOST,
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                }
+            }
+        ).then(response => {
+                if (response.ok) {
+                    const data = response.json();
+                    data.then(value => {
+                        let ids = []
+                        value.forEach((elem) => ids[ids.length] = elem.user_id)
+                        setAdmin_id(ids)
+                        setAdmin(value)
+                    });
+                }
+            }
+        )
+
+        fetch(`${HOST}/channel/${params.id}/member/list/?roles=EDITOR`,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': HOST,
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                }
+            }
+        ).then(response => {
+                if (response.ok) {
+                    const data = response.json();
+                    data.then(value => {
+                        let ids = []
+                        value.forEach((elem) => ids[ids.length] = elem.user_id)
+                        setEditor_id(ids)
+                        setEditor(value)
+                    });
+                }
+            }
+        )
+
+        fetch(`${HOST}/channel/${params.id}/member/list/?roles=MEMBER`,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': HOST,
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                }
+            }
+        ).then(response => {
+                if (response.ok) {
+                    const data = response.json();
+                    data.then(value => {
+                        let ids = []
+                        value.forEach((elem) => ids[ids.length] = elem.user_id)
+                        setMember_id(ids)
+                        setMember(value)
+                    });
+                }
+            }
+        )
+
+        fetch(`${HOST}/channel/${params.id}/member/list/?roles=BLOCKED`,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': HOST,
+                    'Access-Control-Allow-Credentials': 'true',
+                    'Authorization': token != null ? token : "",
+                }
+            }
+        ).then(response => {
+                if (response.ok) {
+                    const data = response.json();
+                    data.then(value => {
+                        let ids = []
+                        value.forEach((elem) => ids[ids.length] = elem.user_id)
+                        setBlocked_id(ids)
+                        setBlocked(value)
+                    });
                 }
             }
         )
@@ -230,8 +334,7 @@ export default function Channel() {
                 }
             }
         )
-
-    }, [navigate, params.id, token]);
+    }, [navigate, params.id, token, users]);
 
     const failToast = useRef();
 
@@ -340,73 +443,89 @@ export default function Channel() {
         )
     } else {
         return (
-
             <div className="channelContainer">
-                {!(typeof channel === "undefined") && !(typeof events === "undefined") ?
+                {!(typeof channel === "undefined") && !(typeof events === "undefined") && !(typeof users === "undefined") ?
                     <>
-                    <div className="left-area gap-5 p-5">
-                        <div className="container">
-                            <div className="box-1">
-                                <h1>{channel.name}</h1>
+                        <div className="left-area gap-5 p-5">
+                            <div className="container">
+                                <div className="box-1">
+                                    {!channel.is_public ?
+                                        <p className="text-xl">Закрытое сообщество</p>
+                                        : null}
+                                    {(channel.is_personal) ?
+                                        <>
+                                            {/*определяем, кто из пользователей владелец канала*/}
+                                            <h1>Страница мероприятий пользователя: {users.filter(elem => elem.id == channel.name)[0].username}</h1>
+                                            <label>{users.filter(elem => elem.id == channel.name)[0].firstname} {users.filter(elem => elem.id == channel.name)[0].surname}</label>
+                                        </>
+                                        : <h1>{channel.name}</h1> }
+                                </div>
+                                <div className="box-2">
+                                    <AddEvent />
+                                </div>
                             </div>
-                            <div className="box-2">
-                                <AddEvent />
-                            </div>
+                            <p className="text-xl">{channel.description}</p>
+                            <EventsContainer events={events}/>
                         </div>
-                        <p className="text-xl">{channel.description}</p>
-                        <EventsContainer events={events}/>
-                    </div>
-                            {!(typeof members === "undefined") ?
-                        <div className="p-5 right-area">
-                            <ChannelMembers members={members}/>
-                            <div className="flex gap-2 justify-content-center">
-                                <Button icon="pi pi-cog" onClick={() => setVisibleRight(true)} />
+                            {channel.is_public && !channel.is_personal && !(typeof owner_id === "undefined") && !(typeof admin_id === "undefined") && !(typeof editor_id === "undefined") && !(typeof member_id === "undefined")  && !(typeof blocked_id === "undefined")?
+                                <ChannelMembers className="middle-area"
+                                                owners={users.filter((elem) => owner_id.includes(elem.id))}
+                                                admins={users.filter((elem) => admin_id.includes(elem.id))}
+                                                editors={users.filter((elem) => editor_id.includes(elem.id))}
+                                                members={users.filter((elem) => member_id.includes(elem.id))}
+                                                blocked={users.filter((elem) => blocked_id.includes(elem.id))}
+                                                channel={channel}
+                                                my_id={me.id}/>
+                            : null}
+                        {!(channel.is_personal) ?
+                            <div className="p-5 right-area">
+                                <div className="flex gap-2 justify-content-center">
+                                    <Button className="" icon="pi pi-cog" onClick={() => setVisibleRight(true)} />
+                                </div>
+                                <Sidebar visible={visibleRight && (myChannels.filter((elem) => {return elem.channel_id === channel.id}).length === 0)}
+                                         position="right" onHide={() => setVisibleRight(false)}>
+                                    <div>
+                                        <h2>Добро пожаловать!</h2>
+                                        <p>
+                                            Вы можете стать участником сообщества.
+                                        </p>
+                                        <Button label="Вступить в сообщество"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToChannel}/>
+                                    </div>
+                                </Sidebar>
+                                <Sidebar visible={visibleRight && (myChannels.filter((elem) => (elem.channel_id === channel.id && elem.permissions === 0)).length !== 0)}
+                                         position="right" onHide={() => setVisibleRight(false)}>
+                                    <div>
+                                        <h2>Добро пожаловать!</h2>
+                                        <p>
+                                            Ваша заявка на добавление в сообщество на рассмотрении.
+                                        </p>
+                                    </div>
+                                </Sidebar>
+                                <Sidebar visible={visibleRight && (myChannels.filter((elem) => (elem.channel_id === channel.id && elem.is_owner)).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
+                                    <div className="gap-5">
+                                        <h2>Добро пожаловать!</h2>
+                                        <p>
+                                            Вы являетесь владельцем сообщества.
+                                        </p>
+                                        <Button label="Удалить сообщество"  icon="pi pi-times" iconPos="right" outlined onClick={deleteChannel}/>
+                                        <p></p>
+                                        <CreateChannelForm defaultName={channel.name} defaultDescription={channel.description} defaultIsPublic={channel.is_public} path={`${HOST}/channel/${channel.id}/`} method='PUT' buttonTitle='Редактировать сообщество' />
+                                        <p></p>
+                                        <Button label="Заявки на вступление"  icon="pi pi-user" iconPos="right" outlined onClick={setWaitModal}/>
+                                        <WaitModal isModalActive={waitModal} setModalActive={setWaitModal} channel_id={params.id} users={users}/>
+                                    </div>
+                                </Sidebar>
+                                <Sidebar visible={visibleRight && (myChannels.filter((elem) => {return elem.channel_id === channel.id && elem.permissions !== 0 && !elem.is_owner}).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
+                                    <div>
+                                        <h2>Добро пожаловать!</h2>
+                                        <p>
+                                            Вы являетесь участником сообщества.
+                                        </p>
+                                        <Button label="Отписаться" icon="pi pi-minus" iconPos="right" outlined onClick={leaveChannel}/>
+                                    </div>
+                                </Sidebar>
                             </div>
-                            <Sidebar visible={visibleRight && (members.filter((elem) => {
-                                return elem.user_id === me.id}).length === 0)} position="right" onHide={() => setVisibleRight(false)}>
-                                <div>
-                                    <h2>Добро пожаловать!</h2>
-                                    <p>
-                                        Вы можете стать участником сообщества.
-                                    </p>
-                                    <Button label="Вступить в сообщество"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToChannel}/>
-                                </div>
-                            </Sidebar>
-                            <Sidebar visible={visibleRight && (members.filter((elem) => {return elem.user_id === me.id && elem.permissions === 0}).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
-                                <div>
-                                    <h2>Добро пожаловать!</h2>
-                                    <p>
-                                        Ваша заявка на добавление в сообщество на рассмотрении.
-                                    </p>
-                                </div>
-                            </Sidebar>
-                            <Sidebar visible={visibleRight && (members.filter((elem) => (elem.user_id === me.id && elem.is_owner)).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
-                                <div className="gap-5">
-                                    <h2>Добро пожаловать!</h2>
-                                    <p>
-                                        Вы являетесь владельцем сообщества.
-                                    </p>
-                                    <Button label="Удалить сообщество"  icon="pi pi-times" iconPos="right" outlined onClick={deleteChannel}/>
-                                    <p></p>
-                                    <CreateChannelForm defaultName={channel.name} defaultDescription={channel.description} defaultIsPublic={channel.is_public} path={`${HOST}/channel/${channel.id}/`} method='PUT' buttonTitle='Редактировать сообщество' />
-                                    <p></p>
-                                    <Button label="Заявки на вступление"  icon="pi pi-user" iconPos="right" outlined onClick={setWaitModal}/>
-                                    <WaitModal isModalActive={waitModal} setModalActive={setWaitModal} channel_id={params.id} users={members}/>
-                                    <p></p>
-                                    <MemberRoleForm channel_id={channel.id} my_id={me.id} members={members} users={users.filter((elem) => elem.id !== me.id)}/>
-                                </div>
-                            </Sidebar>
-                            <Sidebar visible={visibleRight && (members.filter((elem) => {return elem.user_id === me.id && elem.permissions !== 0 && !elem.is_owner}).length !== 0)} position="right" onHide={() => setVisibleRight(false)}>
-                                <div>
-                                    <h2>Добро пожаловать!</h2>
-                                    <p>
-                                        Вы являетесь участником сообщества.
-                                    </p>
-                                    <Button label="Отписаться" icon="pi pi-minus" iconPos="right" outlined onClick={leaveChannel}/>
-                                </div>
-                            </Sidebar>
-                        </div>
-                        : null }
+                        : null}
                     </>
                 : null }
                 <Toast ref={failToast} />
