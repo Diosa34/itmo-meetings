@@ -61,7 +61,7 @@ function AuthForm() {
             }
             formBody = formBody.join("&");
 
-            await fetch(`${HOST}/auth/token/`,
+            await fetch(`${HOST}/auth/token`,
                 {
                     method: 'POST',
                     headers: {
