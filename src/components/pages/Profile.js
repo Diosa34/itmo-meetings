@@ -6,9 +6,10 @@ import {Inplace, InplaceContent, InplaceDisplay} from "primereact/inplace";
 import {InputText} from "primereact/inputtext";
 import {useNavigate} from "react-router-dom";
 import {Toast} from "primereact/toast";
-import showToast from "../toast";
+import showToast from "../functions/toast";
 import {Button} from "primereact/button";
 import HOST from "../../host";
+import ChannelRequests from "../parts/ChannelRequests";
 
 function Profile() {
     const [username, setUsername] = useState();
@@ -261,7 +262,9 @@ function Profile() {
                     <h2>Доп. информация</h2>
                     <p>Дополнительная информация отсутствует</p>
                 </div>
-
+                <div className="right">
+                    <ChannelRequests />
+                </div>
             </div>
             <Toast ref={profileToast} />
         </div>

@@ -1,4 +1,4 @@
-import HOST from "../host";
+import HOST from "../../host";
 
 export default async function request(url, method, content_type, body) {
     return await fetch(url,

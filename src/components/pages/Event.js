@@ -5,7 +5,7 @@ import FeedbackForm from "../forms/FeedbackForm";
 import React, {useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {Toast} from "primereact/toast";
-import useEvent from "../useEvent";
+import useEvent from "../functions/useEvent";
 import HOST from "../../host";
 
 
@@ -224,7 +224,7 @@ function Event() {
                         <label className="first-col">Только для студентов ИТМО: {event.only_for_itmo_students ? "да." : "нет."}</label>
                         <label className="first-col">Только для граждан РФ: {event.only_for_russians ? "да." : "нет."}</label>
                         {getChannel}
-                        <Button visible={!channel.is_personal} label="Посмотреть организатора" icon="pi pi-arrow-right" text raised size="small" iconPos="right" onClick={(e) => {
+                        <Button label="Посмотреть организатора" icon="pi pi-arrow-right" text raised size="small" iconPos="right" onClick={(e) => {
                             navigate(`/channels/${event.channel_id}`)
                         }}/>
                     </div>

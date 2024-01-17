@@ -3,7 +3,7 @@ import '../style/App.css';
 import RegForm from './forms/RegForm';
 import React from "react";
 import AuthForm from "./forms/AuthForm";
-import Container from "./Container";
+import Container from "./parts/Container";
 
 function App() {
     return (

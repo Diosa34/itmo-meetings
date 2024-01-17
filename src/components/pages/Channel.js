@@ -1,6 +1,6 @@
 import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import EventsContainer from "../EventsContainer";
+import EventsContainer from "../parts/EventsContainer";
 import '../../style/Channel.css';
 import {Toast} from "primereact/toast";
 import ErrorPage from "./ErrorPage";
@@ -11,7 +11,7 @@ import WaitModal from "../forms/waitModal";
 import CreateChannelForm from "../forms/CreateChannelForm";
 import MemberRoleForm from "../forms/MemberRoleForm";
 import HOST from "../../host";
-import ChannelMembers from "../ChannelMembers";
+import ChannelMembers from "../parts/ChannelMembers";
 
 export default function Channel() {
     const params = useParams();

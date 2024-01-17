@@ -9,7 +9,7 @@ import {useNavigate} from "react-router-dom";
 import {useFormik} from "formik";
 import {Toast} from "primereact/toast";
 import {classNames} from "primereact/utils";
-import showToast from "../toast";
+import showToast from "../functions/toast";
 import HOST from "../../host";
 
 function AuthForm() {

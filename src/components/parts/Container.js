@@ -1,13 +1,14 @@
 import {Outlet, Route, Routes} from "react-router-dom";
-import MainPage from "./pages/MainPage";
-import Event from "./pages/Event";
-import FeedbackForm from "./forms/FeedbackForm";
-import Profile from "./pages/Profile";
-import CreateChannelForm from "./forms/CreateChannelForm";
+import MainPage from "../pages/MainPage";
+import Event from "../pages/Event";
+import FeedbackForm from "../forms/FeedbackForm";
+import Profile from "../pages/Profile";
+import CreateChannelForm from "../forms/CreateChannelForm";
 import React from "react";
 import Header from "./Header";
-import Channels from "./pages/ChannelsList";
-import Channel from "./pages/Channel";
+import Channels from "../pages/ChannelsList";
+import Channel from "../pages/Channel";
+import MyEvents from "../pages/MyEvents";
 
 function Container() {
     return (
@@ -20,6 +21,7 @@ function Container() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/createChannel" element={<CreateChannelForm />} />
                 <Route path="/channels" element={<Channels />} />
+                <Route path="/myEvents" element={<MyEvents />} />
                 <Route path="/channels/:id" element={<Channel />} />
             </Routes>
             <Outlet />

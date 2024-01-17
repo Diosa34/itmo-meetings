@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-import '../style/Header.css';
+import '../../style/Header.css';
 import {TabMenu} from "primereact/tabmenu";
 import {useNavigate} from "react-router-dom";
 
@@ -8,6 +8,7 @@ function Header() {
     const [activeIndex, setActiveIndex] = useState(0);
     const items = [
         {label: 'Главная', icon: 'pi pi-fw pi-home', link: "/catalog"},
+        {label: 'Мои мероприятия', icon: 'pi pi-calendar-times', link: '/myEvents'},
         {label: 'Сообщества', icon: 'pi pi-fw pi-sitemap', link: '/channels'},
         {icon: 'pi pi-fw pi-user', link: '/profile'}
     ];

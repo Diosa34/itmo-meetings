@@ -2,7 +2,7 @@ import {VirtualScroller} from "primereact/virtualscroller";
 import {Skeleton} from "primereact/skeleton";
 import {classNames} from "primereact/utils";
 import {Button} from "primereact/button";
-import MemberRoleForm from "./forms/MemberRoleForm";
+import MemberRoleForm from "../forms/MemberRoleForm";
 import {Tag} from "primereact/tag";
 
 export default function ChannelMembers({owners, admins, editors, members, blocked, channel, my_id}) {

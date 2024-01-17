@@ -1,4 +1,4 @@
-import HOST from "../host";
+import HOST from "../../host";
 
 export const getFetcher = (url, token) => {
     fetch(url,

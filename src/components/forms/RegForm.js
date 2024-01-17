@@ -11,10 +11,10 @@ import {TabMenu} from "primereact/tabmenu";
 import {useFormik} from "formik";
 import {classNames} from "primereact/utils";
 import {RadioButton} from "primereact/radiobutton";
-import request from "../rest";
-import ShowError from "../ShowError";
+import request from "../functions/rest";
+import ShowError from "../parts/ShowError";
 import {Toast} from "primereact/toast";
-import showToast from "../toast";
+import showToast from "../functions/toast";
 import validate from "../../validation/register";
 import HOST from "../../host";
 

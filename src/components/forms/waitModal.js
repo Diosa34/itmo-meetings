@@ -42,17 +42,21 @@ export default function WaitModal({setModalActive, isModalActive, users, channel
 
     const footerContent = (
         <div>
-            <Button label="Принять" type="submit" text icon="pi pi-check" onSubmit={selectedMembers.forEach((elem) => confirm(elem.user_id))}/>
+            <Button label="Принять" type="submit" text icon="pi pi-check" onSubmit={() => {
+                if (selectedMembers.length !== 0) {
+                    selectedMembers.forEach((elem) => confirm(elem.id))
+                }
+            }}/>
         </div>
     );
 
     return (
         <Dialog header="Заявки на вступление" visible={isModalActive} onHide={() => setModalActive(false)} footer={footerContent}>
             <form className="flex flex-column gap-5">
-                <DataTable value={users} selectionMode={rowClick ? null : 'checkbox'} selection={selectedMembers} onSelectionChange={(e) => setSelectedMembers(e.value)} dataKey="id" tableStyle={{ minWidth: '50rem' }}>
+                <DataTable value={users} selection={selectedMembers} onSelectionChange={(e) => setSelectedMembers(e.value)} dataKey="id" tableStyle={{ minWidth: '50rem' }}>
                     <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-                    <Column field="code" header="Фамилия"></Column>
-                    <Column field="name" header="Имя"></Column>
+                    <Column field="surname" header="Фамилия"></Column>
+                    <Column field="firstname" header="Имя"></Column>
                 </DataTable>
             </form>
         </Dialog>

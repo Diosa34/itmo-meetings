@@ -2,9 +2,9 @@ import React, {useRef, useState} from "react";
 import { Button } from 'primereact/button';
 import {Rating} from "primereact/rating";
 import {Dialog} from "primereact/dialog";
-import showToast from "../toast";
+import showToast from "../functions/toast";
 import {Toast} from "primereact/toast";
-import somePost from "../getFetcher";
+import somePost from "../functions/getFetcher";
 import HOST from "../../host";
 
 function FeedbackForm({setModalActive, isModalActive, isRatingExists, actualRating=0, meeting_id}) {
