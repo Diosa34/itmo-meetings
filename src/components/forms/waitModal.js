@@ -52,13 +52,14 @@ export default function WaitModal({setModalActive, isModalActive, users, channel
 
     return (
         <Dialog header="Заявки на вступление" visible={isModalActive} onHide={() => setModalActive(false)} footer={footerContent}>
-            <form className="flex flex-column gap-5">
-                <DataTable value={users} selection={selectedMembers} onSelectionChange={(e) => setSelectedMembers(e.value)} dataKey="id" tableStyle={{ minWidth: '50rem' }}>
-                    <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-                    <Column field="surname" header="Фамилия"></Column>
-                    <Column field="firstname" header="Имя"></Column>
-                </DataTable>
-            </form>
+            <div className="text-l font-light text-900">
+                Список тех, кто хочет стать участником данного сообщества.
+            </div>
+            <DataTable value={users} selection={selectedMembers} onSelectionChange={(e) => setSelectedMembers(e.value)} dataKey="id" tableStyle={{ minWidth: '50rem' }}>
+                <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
+                <Column field="surname" header="Фамилия"></Column>
+                <Column field="firstname" header="Имя"></Column>
+            </DataTable>
         </Dialog>
     )
 }

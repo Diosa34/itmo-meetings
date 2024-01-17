@@ -21,6 +21,9 @@ function Profile() {
     const [gender, setGender] = useState();
     const [date_of_birth, setDate_of_birth] = useState();
     const [user_id, setUser_id] = useState();
+
+    // const [myChannels, setMyChannels] = useState()
+
     const token = 'Bearer ' + localStorage.getItem('token')
     const navigate = useNavigate();
 
@@ -62,6 +65,30 @@ function Profile() {
                 }
             )
     }, [navigate, profileToast, token]);
+
+    // useEffect(() => {
+    //     fetch(`${HOST}/user/me/channels/`,
+    //         {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Accept': 'application/json',
+    //                 'Access-Control-Allow-Origin': HOST,
+    //                 'Access-Control-Allow-Credentials': 'true',
+    //                 'Authorization': token != null ? token : "",
+    //             }
+    //         }
+    //     ).then(response => {
+    //         if (response.ok) {
+    //             const data = response.json();
+    //             data.then(value => {
+    //                 setMyChannels(value)
+    //             });
+    //         } else if (response.status === 401) {
+    //             navigate('/login')
+    //             // showToast(profileToast, 'error', 'Страница недоступна', 'Пользователь не авторизован');
+    //         }
+    //     })
+    // })
 
     const editProfile = () => {
         fetch(`${HOST}/user/${user_id}/`,

@@ -5,7 +5,6 @@ import FeedbackForm from "../forms/FeedbackForm";
 import React, {useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {Toast} from "primereact/toast";
-import useEvent from "../functions/useEvent";
 import HOST from "../../host";
 
 
@@ -230,7 +229,7 @@ function Event() {
                     </div>
                     <div className="box-2">
                         <div>
-                            <Button visible={!isMember} label="Отправить заявку"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToMeeting}/>
+                            <Button visible={!isMember} label="Присоединиться к мероприятию"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToMeeting}/>
                             <Button visible={isMember} label="Покинуть мероприятие" icon="pi pi-times" iconPos="right" severity="danger" outlined onClick={leftMeeting}/>
                         </div>
                     </div>
