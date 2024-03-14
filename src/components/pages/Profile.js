@@ -169,7 +169,9 @@ function Profile() {
         <div>
             <div className="content">
                 <h1 className="title">Мой профиль</h1>
+
                 <div className="left">
+                    <Avatar icon="pi pi-user" size="xlarge" shape="circle" />
                     <div className="card">
                         <Inplace closable onClose={editProfile}>
                             <InplaceDisplay>
@@ -286,8 +288,7 @@ function Profile() {
                     <Button label="Удалить профиль" severity="danger" outlined onClick={deleteAccount}/>
                 </div>
                 <div className="middle">
-                    <h2>Доп. информация</h2>
-                    <p>Дополнительная информация отсутствует</p>
+
                 </div>
                 <div className="right">
                     <ChannelRequests />

@@ -15,7 +15,9 @@ import {Toast} from "primereact/toast";
 import '../../style/FormBackground.css';
 import HOST from "../../host";
 
-export default function AddEvent() {
+export default function AddEvent({title = "", description = "", start_datetime = new Date(), duration_in_minutes = null, address = "", capacity = 4,
+    price = 0, minimum_age = 0, maximum_age = 150, only_for_itmo_students = false, only_for_russians = false, channel_id = "", footerTitle = "Создать мероприятие",
+    path = `${HOST}/meeting/`, method = 'POST', displayChannel = 'block'}) {
     const [isModalActive, setModalActive] = useState(false);
     const [myChannels, setMyChannels] = useState();
     const [selectedChannel, setSelectedChannel] = useState();
@@ -24,28 +26,29 @@ export default function AddEvent() {
         code: 500,
         title: 'Сообщества пользователя не были загружены',
         message: 'Доступ к сообществу ограничен для данного пользователя'})
+    const [duration, setDuration] = useState(duration_in_minutes)
     const navigate = useNavigate()
 
     const footerContent = (
-        <div >
-            <Button className={'footer'} label="Создать мероприятие" type="submit" icon="pi pi-check" />
+        <div>
+            <Button className={'footer'} label={footerTitle} type="submit" icon="pi pi-check" />
         </div>
     );
 
     const formik = useFormik({
         initialValues: {
-            title: "",
-            description: "",
-            start_datetime: new Date(),
-            duration_in_minutes: null, // просто число
-            address: "",
-            capacity: 4, // просто число
-            price: 0,
-            minimum_age: 0,
-            maximum_age: 150,
-            only_for_itmo_students: false,
-            only_for_russians: false,
-            channel_id: "",
+            title: title,
+            description: description,
+            start_datetime: start_datetime,
+            duration_in_minutes: duration_in_minutes, // просто число
+            address: address,
+            capacity: capacity, // просто число
+            price: price,
+            minimum_age: minimum_age,
+            maximum_age: maximum_age,
+            only_for_itmo_students: only_for_itmo_students,
+            only_for_russians: only_for_russians,
+            channel_id: channel_id,
         },
         validate: (data) => {
             let errors = {};
@@ -56,7 +59,7 @@ export default function AddEvent() {
 
             if (!data.start_datetime) {
                 errors.start_datetime = 'Выберите дату и время начала мероприятия.';
-            } else if (data.start_datetime.getTime() <= new Date().getTime()) {
+            } else if (Date.parse(data.start_datetime) <= new Date().getTime()) {
                 errors.start_datetime = 'Некорректная дата, слишком позднее начало.';
             }
 
@@ -80,7 +83,7 @@ export default function AddEvent() {
                 errors.channel_id = 'Выберите автора.';
             }
 
-            if (data.minimum_age > data.maximum_age || !data.minimum_age || !data.maximum_age) {
+            if (data.minimum_age > data.maximum_age || (!data.minimum_age && data.minimum_age !== 0) || !data.maximum_age) {
                 errors.minimum_age = 'Максимальный возраст должен быть больше минимального'
                 errors.maximum_age = 'Максимальный возраст должен быть больше минимального'
             }
@@ -89,9 +92,9 @@ export default function AddEvent() {
         },
         onSubmit: (data) => {
             const token = 'Bearer ' + localStorage.getItem('token')
-            fetch(`${HOST}/meeting/`,
+            fetch(path,
             {
-                    method: 'POST',
+                    method: method,
                     headers: {
                         'Accept': 'application/json',
                         'Content-type': 'application/json',
@@ -214,19 +217,21 @@ export default function AddEvent() {
         toast.current.show({severity:'error', summary: error.title, detail: error.message, life: 3000});
     }
 
-    const calculateDuration = (value) => {
-        if (selectedUnit === 'мин.') {
+    const calculateDuration = (value, unit) => {
+        console.log(unit)
+        console.log(value)
+        if (unit === 'мин.') {
             return value
-        } else if (selectedUnit === 'час.') {
+        } else if (unit === 'час.') {
             return value * 60
-        } else if (selectedUnit === 'дн.') {
+        } else if (unit === 'дн.') {
             return value * 60 * 24
         }
     }
 
     return (
         <div>
-            <Dialog className="auth-card" header="Новое мероприятие" visible={isModalActive} onHide={() => setModalActive(false)} style={{ width: '50vw' }} >
+            <Dialog className="auth-card" header={footerTitle} visible={isModalActive} onHide={() => setModalActive(false)} style={{ width: '50vw' }} >
                 <form onSubmit={formik.handleSubmit} className="p-4 field flex flex-column gap-4">
                     <div>
                         <span className="p-float-label">
@@ -284,10 +289,11 @@ export default function AddEvent() {
                             <span className="p-float-label">
                             <InputText
                                 inputid="duration_in_minutes"
-                                value={formik.values.duration_in_minutes}
+                                value={duration}
                                 className={classNames({ 'p-invalid': isFormFieldInvalid('duration_in_minutes') })}
                                 onChange={(e) => {
-                                    formik.setFieldValue('duration_in_minutes', calculateDuration(e.target.value));
+                                    formik.setFieldValue('duration_in_minutes', calculateDuration(e.target.value, selectedUnit));
+                                    setDuration(e.target.value)
                                 }
                                 }
                             />
@@ -301,6 +307,7 @@ export default function AddEvent() {
                                 options={['час.', 'мин.', 'дн.']}
                                 onChange={(e) => {
                                     setSelectedUnit(e.value)
+                                    formik.setFieldValue('duration_in_minutes', calculateDuration(duration, e.value));
                                 }}
                             />
                         </div>
@@ -412,7 +419,7 @@ export default function AddEvent() {
                         </span>
                         {getFormErrorMessage('only_for_russians')}
                     </div>
-                    <div>
+                    <div style={{display: displayChannel}}>
                         <span className="p-float-label">
                             <Dropdown
                                 style={{ minWidth: '40vw', minHeight: '4vw'}}
@@ -430,15 +437,15 @@ export default function AddEvent() {
                         </span>
                         {getFormErrorMessage('channel_id')}
                     </div>
-                    <Button className={'footer'} label="Создать мероприятие" type="submit" icon="pi pi-check" />
+                    <Button className={'footer'} label={footerTitle} type="submit" icon="pi pi-check" />
                 </form>
             </Dialog>
             <Toast ref={toast} />
-            <Button label="Создать мероприятие" onClick={() => {
+            <Button severity="warning" label={footerTitle} onClick={() => {
                     setModalActive(true)
                     getMyChannels()
                 }
-            } icon="pi pi-plus" iconPos="right" text raised />
+            } outlined />
         </div>
     )
 }

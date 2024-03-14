@@ -6,6 +6,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {Toast} from "primereact/toast";
 import HOST from "../../host";
+import AddEvent from "../forms/AddEvent";
 
 
 function Event() {
@@ -228,9 +229,14 @@ function Event() {
                         }}/>
                     </div>
                     <div className="box-2">
-                        <div>
-                            <Button visible={!isMember} label="Присоединиться к мероприятию"  icon="pi pi-plus" iconPos="right" outlined onClick={joinToMeeting}/>
-                            <Button visible={isMember} label="Покинуть мероприятие" icon="pi pi-times" iconPos="right" severity="danger" outlined onClick={leftMeeting}/>
+                        <div className="gap-2">
+                            <Button className="mb-2" visible={!isMember} label="Присоединиться к мероприятию"  icon="pi pi-plus" iconPos="right" severity="success" outlined onClick={joinToMeeting}/>
+                            <Button className="mb-2" visible={isMember} label="Покинуть мероприятие" icon="pi pi-times" iconPos="right" severity="danger" outlined onClick={leftMeeting}/>
+                            <AddEvent title={event.title} description={event.description} start_datetime={new Date(event.start_datetime)}
+                                      duration_in_minutes={event.duration_in_minutes} address={event.address} capacity={event.capacity}
+                                      price={event.price} minimum_age={event.minimum_age} maximum_age={event.maximum_age}
+                                      only_for_itmo_students={event.only_for_itmo_students} only_for_russians={event.only_for_russians}
+                                      channel_id={event.channel_id} footerTitle={"Редактировать мероприятие"} path={`${HOST}/meeting/${params.id}/`} method={'PUT'} displayChannel={'none'}/>
                         </div>
                     </div>
                     <FeedbackForm setModalActive={setModalActive} isModalActive={isModalActive} meeting_id={event.id} actualRating={feedback} isRatingExists={!feedback===undefined}/>
